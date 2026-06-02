@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Qissa — Le livre personnalisé où votre enfant est le héros</title>
+<meta name="description" content="Qissa crée des livres pour enfants 100% personnalisés au Maroc. Votre enfant devient le héros d'une aventure unique. Livraison partout au Maroc." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- RESET & BASE ---------- */
+  *,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1a1a2e;
+    background: #fefcf8;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  img { max-width:100%; display:block; }
+  a { text-decoration:none; color:inherit; }
+  button { font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  /* ---------- COLORS ---------- */
+  :root {
+    --gold: #FFD700;
+    --gold-dark: #E6B800;
+    --sky: #5BC0EB;
+    --purple: #8B5CF6;
+    --green: #6FCF97;
+    --dark: #1a1a2e;
+    --gray: #6b7280;
+    --light: #faf6ee;
+    --cream: #fefcf8;
+    --border: #ece6d6;
+  }
+
+  /* ---------- TYPOGRAPHY ---------- */
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--dark);
+  }
+  h1 { font-size: clamp(2.4rem, 5.5vw, 4.5rem); }
+  h2 { font-size: clamp(2rem, 4vw, 3.2rem); }
+  h3 { font-size: clamp(1.3rem, 2vw, 1.7rem); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- NAVBAR ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(254, 252, 248, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family:'Fraunces',serif; font-weight:900; font-size:1.6rem;
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo-star {
+    width:30px; height:30px;
+    background: linear-gradient(135deg, var(--gold), var(--purple));
+    border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
+    color:white; font-size:1.1rem;
+  }
+  .nav-links { display:flex; gap:32px; align-items:center; }
+  .nav-links a { color: var(--gray); font-weight:500; font-size:0.95rem; transition: color .2s; }
+  .nav-links a:hover { color: var(--dark); }
+  .nav-cta {
+    background: var(--dark); color: white;
+    padding: 10px 22px; border-radius: 999px;
+    font-weight:600; font-size: 0.92rem;
+    transition: transform .2s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); color:white; }
+  .mobile-toggle { display:none; font-size:1.5rem; }
+
+  /* ---------- BUTTONS ---------- */
+  .btn-primary {
+    background: var(--dark); color: white;
+    padding: 16px 32px; border-radius: 999px;
+    font-weight: 600; font-size: 1rem;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); color:white; }
+  .btn-secondary {
+    background: white; color: var(--dark);
+    padding: 16px 32px; border-radius: 999px;
+    font-weight: 600; font-size: 1rem;
+    border: 2px solid var(--border);
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--dark); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap:8px;
+    background: rgba(255, 215, 0, 0.15);
+    color: var(--gold-dark);
+    padding: 8px 18px; border-radius: 999px;
+    font-size: 0.88rem; font-weight: 600;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+  }
+  .hero p.lead {
+    color: var(--gray); font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    max-width: 680px; margin: 24px auto 36px;
+  }
+  .hero-cta-row {
+    display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    margin-bottom: 18px;
+  }
+  .hero-note {
+    color: var(--gray); font-size: 0.9rem;
+    display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;
+  }
+  .hero-note span { display:flex; align-items:center; gap:6px; }
+  .hero-image {
+    margin: 50px auto 0;
+    max-width: 600px;
+    position: relative;
+  }
+  .hero-image img {
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(139, 92, 246, 0.25);
+  }
+  .float-deco { position: absolute; pointer-events: none; }
+  .float-deco.s1 { top: 80px; left: 5%; font-size: 2.5rem; animation: float 4s ease-in-out infinite; }
+  .float-deco.s2 { top: 150px; right: 8%; font-size: 3rem; animation: float 5s ease-in-out infinite reverse; }
+  .float-deco.s3 { bottom: 100px; left: 10%; font-size: 2rem; animation: float 6s ease-in-out infinite; }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(8deg); }
+  }
+
+  /* ---------- SECTION COMMON ---------- */
+  section { padding: 90px 0; }
+  .section-eyebrow {
+    text-transform: uppercase; letter-spacing: 0.15em;
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--purple); margin-bottom: 12px;
+  }
+  .section-title { text-align: center; margin-bottom: 16px; }
+  .section-sub { text-align: center; color: var(--gray); max-width: 640px; margin: 0 auto 60px; font-size: 1.1rem; }
+
+  /* ---------- FEATURE BLOCKS (Scrively-style alternating) ---------- */
+  .feature {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 70px; align-items: center;
+    margin-bottom: 130px;
+  }
+  .feature:last-child { margin-bottom: 0; }
+  .feature.reverse .feature-text { order: 2; }
+  .feature-text h2 { margin-bottom: 20px; }
+  .feature-text h2 .highlight {
+    background: linear-gradient(120deg, transparent 0%, transparent 30%, rgba(255,215,0,0.45) 30%, rgba(255,215,0,0.45) 90%, transparent 90%);
+    padding: 0 4px;
+  }
+  .feature-text p { color: var(--gray); font-size: 1.08rem; margin-bottom: 12px; }
+  .feature-image {
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  .feature-image img { width:100%; height: auto; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how-section { background: var(--light); border-radius: 40px; margin: 0 24px; padding: 90px 24px; }
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 32px; max-width: 1100px; margin: 0 auto;
+  }
+  .step {
+    background: white; padding: 36px 28px;
+    border-radius: 24px;
+    position: relative;
+    transition: transform .25s;
+  }
+  .step:hover { transform: translateY(-6px); }
+  .step-num {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--dark); font-weight: 900; font-size: 1.3rem;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(255,215,0,0.4);
+  }
+  .step h3 { font-size: 1.3rem; margin-bottom: 12px; }
+  .step p { color: var(--gray); font-size: 0.98rem; }
+
+  /* ---------- ORDER FORM ---------- */
+  .order-section {
+    background: linear-gradient(135deg, #fff9e6 0%, #f3e9ff 100%);
+    border-radius: 40px; margin: 0 24px;
+    padding: 90px 24px;
+  }
+  .form-wrapper {
+    max-width: 720px; margin: 0 auto;
+    background: white; border-radius: 28px;
+    padding: 48px;
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+  .form-group label {
+    font-weight: 600; font-size: 0.95rem; color: var(--dark);
+  }
+  .form-group label .req { color: #e74c3c; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    font-size: 1rem; font-family: inherit;
+    transition: border-color .2s, box-shadow .2s;
+    background: var(--cream);
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12);
+    background: white;
+  }
+  .form-group textarea { resize: vertical; min-height: 90px; }
+  .pack-options {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-top: 6px;
+  }
+  .pack-option {
+    border: 2px solid var(--border);
+    border-radius: 14px; padding: 16px 12px;
+    cursor: pointer; text-align: center;
+    transition: all .2s; background: var(--cream);
+  }
+  .pack-option:hover { border-color: var(--gold); }
+  .pack-option input { display: none; }
+  .pack-option input:checked + .pack-content {
+    color: var(--purple);
+  }
+  .pack-option:has(input:checked) {
+    border-color: var(--purple);
+    background: rgba(139, 92, 246, 0.06);
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.15);
+  }
+  .pack-name { font-weight: 700; font-size: 1rem; }
+  .pack-price { font-size: 0.85rem; color: var(--gray); margin-top: 4px; }
+  .form-submit { width: 100%; justify-content: center; margin-top: 12px; font-size: 1.05rem; padding: 18px; }
+  .form-success {
+    display:none; background: #d1f7e0; color: #166534;
+    padding: 18px; border-radius: 14px; text-align: center;
+    font-weight: 600; margin-bottom: 18px;
+  }
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testimonials {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .testi {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 24px; padding: 32px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .testi:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+  .stars { color: var(--gold); margin-bottom: 14px; font-size: 1.1rem; }
+  .testi p { color: var(--dark); font-size: 1.02rem; margin-bottom: 20px; font-style: italic; }
+  .testi-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .testi-avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--purple));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-family: 'Fraunces', serif;
+  }
+  .testi-name { font-weight: 600; font-size: 0.95rem; }
+  .testi-city { color: var(--gray); font-size: 0.85rem; }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta {
+    text-align: center;
+    background: var(--dark);
+    color: white;
+    border-radius: 40px;
+    margin: 0 24px;
+    padding: 100px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-cta::before, .final-cta::after {
+    content:''; position: absolute;
+    width: 280px; height: 280px; border-radius: 50%;
+    filter: blur(80px); opacity: 0.5;
+  }
+  .final-cta::before { background: var(--gold); top: -60px; left: -60px; }
+  .final-cta::after { background: var(--purple); bottom: -60px; right: -60px; }
+  .final-cta h2 { color: white; position: relative; z-index:1; }
+  .final-cta p { color: rgba(255,255,255,0.75); max-width: 540px; margin: 20px auto 36px; position: relative; z-index:1; font-size: 1.1rem; }
+  .final-cta .btn-primary {
+    background: var(--gold); color: var(--dark);
+    position: relative; z-index:1;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer { padding: 60px 0 32px; border-top: 1px solid var(--border); margin-top: 90px; }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 40px;
+  }
+  .footer-brand p { color: var(--gray); margin-top: 12px; max-width: 320px; }
+  .footer-col h4 { font-family:'Inter',sans-serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; color: var(--dark); }
+  .footer-col a { display: block; color: var(--gray); font-size: 0.95rem; margin-bottom: 10px; transition: color .2s; }
+  .footer-col a:hover { color: var(--dark); }
+  .footer-bottom {
+    border-top: 1px solid var(--border); padding-top: 24px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    color: var(--gray); font-size: 0.88rem;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    .nav-links { display:none; }
+    .mobile-toggle { display: block; }
+    .feature { grid-template-columns: 1fr; gap: 36px; margin-bottom: 80px; }
+    .feature.reverse .feature-text { order: 0; }
+    .steps { grid-template-columns: 1fr; }
+    .testimonials { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .pack-options { grid-template-columns: 1fr; }
+    .form-wrapper { padding: 28px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    section { padding: 60px 0; }
+    .how-section, .order-section, .final-cta { margin: 0 12px; padding: 60px 20px; border-radius: 28px; }
+  }
+  @media (max-width: 500px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============= NAV ============= -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-star">✨</span>
+      Qissa
+    </a>
+    <div class="nav-links">
+      <a href="#fonctionnalites">Fonctionnalités</a>
+      <a href="#comment">Comment ça marche</a>
+      <a href="#temoignages">Témoignages</a>
+      <a href="#commander" class="nav-cta">Commander mon livre</a>
+    </div>
+    <button class="mobile-toggle" onclick="document.querySelector('.nav-links').style.display = document.querySelector('.nav-links').style.display==='flex' ? 'none' : 'flex'">☰</button>
+  </div>
+</nav>
+
+<!-- ============= HERO ============= -->
+<header class="hero">
+  <div class="container">
+    <span class="float-deco s1">⭐</span>
+    <span class="float-deco s2">📖</span>
+    <span class="float-deco s3">🌙</span>
+
+    <div class="hero-badge">
+      <span>🇲🇦</span> Fabriqué avec amour au Maroc
+    </div>
+    <h1>
+      Le livre où <em style="font-style:italic; color: var(--purple);">votre enfant</em><br>
+      est le véritable héros.
+    </h1>
+    <p class="lead">
+      Qissa crée des livres pour enfants entièrement personnalisés.
+      Le prénom, le visage, l'histoire — tout est conçu spécialement pour lui.
+      Une aventure unique, imprimée et livrée chez vous partout au Maroc.
+    </p>
+    <div class="hero-cta-row">
+      <a href="#commander" class="btn-primary">Créer le livre de mon enfant →</a>
+      <a href="#comment" class="btn-secondary">Voir comment ça marche</a>
+    </div>
+    <div class="hero-note">
+      <span>✅ Livraison 5–7 jours</span>
+      <span>📚 Couverture rigide premium</span>
+      <span>💛 Made in Morocco</span>
+    </div>
+    <div class="hero-image">
+      <img src="https://www.genspark.ai/api/files/s/C2CfpcMT?cache_control=3600" alt="Livre personnalisé Qissa avec un enfant héros" />
+    </div>
+  </div>
+</header>
+
+<!-- ============= FEATURES ============= -->
+<section id="fonctionnalites">
+  <div class="container">
+    <div class="section-title">
+      <div class="section-eyebrow">Pourquoi Qissa</div>
+      <h2>Bien plus qu'un livre.<br>Une aventure qu'il vivra lui-même.</h2>
+    </div>
+
+    <!-- Feature 1 -->
+    <div class="feature" style="margin-top: 80px;">
+      <div class="feature-text">
+        <h2>Votre enfant <span class="highlight">devient le héros</span> de chaque page.</h2>
+        <p>
+          Son prénom apparaît dans le titre, dans les dialogues, sur la couverture.
+          Son visage prend vie dans des illustrations Chibi colorées et magiques.
+        </p>
+        <p>
+          Quand il ouvre le livre, il ne lit pas une histoire — il <strong>vit son histoire</strong>.
+          Et ça change tout.
+        </p>
+      </div>
+      <div class="feature-image">
+        <img src="https://www.genspark.ai/api/files/s/pRZTeyL3?cache_control=3600" alt="Livre ouvert avec personnalisation du prénom" />
+      </div>
+    </div>
+
+    <!-- Feature 2 -->
+    <div class="feature reverse">
+      <div class="feature-text">
+        <h2>Des histoires qui <span class="highlight">transmettent nos valeurs</span>.</h2>
+        <p>
+          Amitié, courage, entraide, fierté de nos racines.
+          Chaque aventure Qissa est pensée par des éducateurs et illustrateurs marocains.
+        </p>
+        <p>
+          Vos enfants découvrent des héros qui leur ressemblent, dans des univers
+          inspirés de notre culture — de Marrakech aux étoiles du désert.
+        </p>
+      </div>
+      <div class="feature-image">
+        <img src="https://www.genspark.ai/api/files/s/0Fsh6eZK?cache_control=3600" alt="Personnages Chibi marocains" />
+      </div>
+    </div>
+
+    <!-- Feature 3 -->
+    <div class="feature">
+      <div class="feature-text">
+        <h2>Un coffret cadeau <span class="highlight">qui marque les esprits</span>.</h2>
+        <p>
+          Avec la formule Golden, le livre arrive dans un coffret de luxe :
+          papier doré, cadre souvenir, et motifs zellige inspirés de l'artisanat marocain.
+        </p>
+        <p>
+          Le cadeau d'anniversaire, de naissance, ou d'Aïd qu'on n'oublie pas.
+          Effet "wow" garanti à l'ouverture.
+        </p>
+      </div>
+      <div class="feature-image">
+        <img src="https://www.genspark.ai/api/files/s/rQzzPZ3q?cache_control=3600" alt="Coffret Golden Qissa avec livre premium" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============= HOW IT WORKS ============= -->
+<section id="comment" style="padding: 60px 0;">
+  <div class="how-section">
+    <div class="section-title">
+      <div class="section-eyebrow">Simple comme bonjour</div>
+      <h2>Votre livre en 3 étapes.</h2>
+    </div>
+    <p class="section-sub">
+      Quelques clics suffisent pour transformer votre enfant en héros d'un livre imprimé chez vous.
+    </p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Personnalisez</h3>
+        <p>Renseignez le prénom de votre enfant, son âge, et choisissez son apparence physique. Sélectionnez l'histoire qui lui correspond.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Visualisez</h3>
+        <p>Notre équipe d'illustrateurs crée un aperçu unique de son livre. Vous validez l'illustration de couverture avant impression.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Recevez</h3>
+        <p>Votre livre est imprimé sur papier premium avec une couverture rigide, puis livré chez vous en 5 à 7 jours via Amana ou Aramex.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= ORDER FORM ============= -->
+<section id="commander" style="padding: 60px 0;">
+  <div class="order-section">
+    <div class="section-title">
+      <div class="section-eyebrow">✨ Commencez l'aventure</div>
+      <h2>Créez le livre de votre enfant.</h2>
+    </div>
+    <p class="section-sub">
+      Remplissez ce formulaire en 2 minutes. Notre équipe vous contacte sous 24h pour valider la commande.
+    </p>
+
+    <div class="form-wrapper">
+      <div id="success" class="form-success">
+        🎉 Merci ! Votre demande est envoyée. Nous vous contactons sous 24h.
+      </div>
+      <form id="qissaForm" onsubmit="return submitForm(event)">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Votre prénom <span class="req">*</span></label>
+            <input type="text" name="parentName" required placeholder="Ex: Sara" />
+          </div>
+          <div class="form-group">
+            <label>Votre téléphone <span class="req">*</span></label>
+            <input type="tel" name="phone" required placeholder="06 XX XX XX XX" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Votre email <span class="req">*</span></label>
+          <input type="email" name="email" required placeholder="vous@email.com" />
+        </div>
+
+        <hr style="border: none; border-top: 1px dashed var(--border); margin: 24px 0;">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prénom de l'enfant <span class="req">*</span></label>
+            <input type="text" name="childName" required placeholder="Ex: Yassine" />
+          </div>
+          <div class="form-group">
+            <label>Âge de l'enfant <span class="req">*</span></label>
+            <select name="age" required>
+              <option value="">Choisir...</option>
+              <option>2-3 ans</option>
+              <option>4-5 ans</option>
+              <option>6-7 ans</option>
+              <option>8-10 ans</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Genre <span class="req">*</span></label>
+            <select name="gender" required>
+              <option value="">Choisir...</option>
+              <option>Garçon</option>
+              <option>Fille</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Langue du livre <span class="req">*</span></label>
+            <select name="lang" required>
+              <option value="">Choisir...</option>
+              <option>Arabe classique</option>
+              <option>Darija marocaine</option>
+              <option>Français</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Choisissez votre formule <span class="req">*</span></label>
+          <div class="pack-options">
+            <label class="pack-option">
+              <input type="radio" name="pack" value="essentielle" required />
+              <div class="pack-content">
+                <div class="pack-name">Essentielle</div>
+                <div class="pack-price">à partir de 250 DH</div>
+              </div>
+            </label>
+            <label class="pack-option">
+              <input type="radio" name="pack" value="distinctive" />
+              <div class="pack-content">
+                <div class="pack-name">Distinctive</div>
+                <div class="pack-price">à partir de 350 DH</div>
+              </div>
+            </label>
+            <label class="pack-option">
+              <input type="radio" name="pack" value="golden" />
+              <div class="pack-content">
+                <div class="pack-name">⭐ Golden</div>
+                <div class="pack-price">à partir de 450 DH</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Ville de livraison <span class="req">*</span></label>
+          <select name="city" required>
+            <option value="">Choisir...</option>
+            <option>Casablanca</option>
+            <option>Rabat</option>
+            <option>Marrakech</option>
+            <option>Tanger</option>
+            <option>Fès</option>
+            <option>Agadir</option>
+            <option>Autre ville</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Notes ou occasion spéciale (optionnel)</label>
+          <textarea name="notes" placeholder="Ex: Pour son anniversaire le 15 juin, il adore les pirates..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary form-submit">
+          🎁 Envoyer ma demande
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============= TESTIMONIALS ============= -->
+<section id="temoignages">
+  <div class="container">
+    <div class="section-title">
+      <div class="section-eyebrow">Témoignages</div>
+      <h2>Ce que disent les parents.</h2>
+    </div>
+    <p class="section-sub">Plus de 1 200 familles marocaines ont déjà offert un Qissa à leurs enfants.</p>
+
+    <div class="testimonials">
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"Mon fils Adam n'arrêtait pas de relire son livre. Il était tellement fier de se voir en héros ! Le coffret Golden est magnifique."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">S</div>
+          <div>
+            <div class="testi-name">Salma B.</div>
+            <div class="testi-city">Casablanca</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"Cadeau d'Aïd pour ma nièce — elle a fondu en larmes (de joie). La qualité d'impression est vraiment premium. À refaire !"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">Y</div>
+          <div>
+            <div class="testi-name">Younes E.</div>
+            <div class="testi-city">Rabat</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"Enfin un livre en darija avec des personnages qui ressemblent à mes enfants. Bravo Qissa, c'est exactement ce qu'il nous manquait."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">F</div>
+          <div>
+            <div class="testi-name">Fatima Z.</div>
+            <div class="testi-city">Marrakech</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= FINAL CTA ============= -->
+<section style="padding: 30px 0 90px;">
+  <div class="final-cta">
+    <h2>Prêt à offrir une<br>aventure inoubliable ?</h2>
+    <p>
+      Votre enfant mérite un livre qui parle de lui, qui lui ressemble, qui restera dans sa bibliothèque toute sa vie.
+    </p>
+    <a href="#commander" class="btn-primary">Créer mon livre Qissa →</a>
+  </div>
+</section>
+
+<!-- ============= FOOTER ============= -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-star">✨</span>
+          Qissa
+        </a>
+        <p>Des livres personnalisés où chaque enfant marocain devient le héros de sa propre histoire.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Produit</h4>
+        <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#comment">Comment ça marche</a>
+        <a href="#commander">Commander</a>
+      </div>
+      <div class="footer-col">
+        <h4>Société</h4>
+        <a href="#">À propos</a>
+        <a href="#">Notre équipe</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="/cdn-cgi/l/email-protection#d8b0bdb4b4b798a9b1ababb9f6b5b9"><span class="__cf_email__" data-cfemail="59313c3535361928302a2a38773438">[email&#160;protected]</span></a>
+        <a href="tel:+212600000000">+212 6 00 00 00 00</a>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 Qissa. Tous droits réservés. Fait avec 💛 au Maroc.</div>
+      <div><a href="#">Mentions légales</a> · <a href="#">Confidentialité</a></div>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function submitForm(e){
+    e.preventDefault();
+    // Démo : afficher le message de succès. À remplacer par l'envoi vers votre backend / Formspree / Google Sheets.
+    document.getElementById('success').style.display = 'block';
+    document.getElementById('qissaForm').reset();
+    document.getElementById('success').scrollIntoView({behavior:'smooth', block:'center'});
+    setTimeout(()=>{ document.getElementById('success').style.display='none'; }, 6000);
+    return false;
+  }
+</script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
