@@ -735,16 +735,34 @@
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  function submitForm(e){
+<script>
+  document.getElementById('qissaForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    // Démo : afficher le message de succès. À remplacer par l'envoi vers votre backend / Formspree / Google Sheets.
-    document.getElementById('success').style.display = 'block';
-    document.getElementById('qissaForm').reset();
-    document.getElementById('success').scrollIntoView({behavior:'smooth', block:'center'});
-    setTimeout(()=>{ document.getElementById('success').style.display='none'; }, 6000);
-    return false;
-  }
+    
+    var form = e.target;
+    var data = new FormData(form);
+    var params = new URLSearchParams();
+    
+    for (var pair of data.entries()) {
+      params.append(pair[0], pair[1]);
+    }
+    
+    fetch('https://script.google.com/macros/s/VOTRE-URL-COPIÉE/exec', {
+      method: 'POST',
+      body: params
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('success').style.display = 'block';
+      form.reset();
+      document.getElementById('success').scrollIntoView({behavior:'smooth', block:'center'});
+      setTimeout(() => { document.getElementById('success').style.display = 'none'; }, 6000);
+    })
+    .catch(error => {
+      console.error('Erreur:', error);
+      alert('Une erreur est survenue. Veuillez réessayer.');
+    });
+  });
 </script>
 
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
