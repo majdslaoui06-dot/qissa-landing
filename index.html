@@ -420,24 +420,124 @@
   border-color: transparent transparent transparent #1A1A2E;
 }
 
+/* Badge WhatsApp Flottant — ANIMÉ */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  background: #25D366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  z-index: 1000;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  
+  /* Animation d'entrée */
+  animation: whatsapp-pop 0.6s ease 1s both,
+             whatsapp-pulse 2s ease-in-out 2s infinite;
+}
+
+/* Effet hover */
+.whatsapp-float:hover {
+  transform: scale(1.15) translateY(-6px);
+  box-shadow: 0 12px 40px rgba(37, 211, 102, 0.6);
+  animation-play-state: paused; /* Stoppe les animations au survol */
+}
+
+/* Vibration rapide au clic */
+.whatsapp-float:active {
+  animation: whatsapp-shake 0.4s ease;
+}
+
+/* Icône WhatsApp */
+.whatsapp-icon {
+  width: 32px;
+  height: 32px;
+  animation: whatsapp-icon-bounce 3s ease-in-out infinite;
+}
+
+/* Tooltip */
+.whatsapp-tooltip {
+  position: absolute;
+  right: 70px;
+  background: #1A1A2E;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.whatsapp-tooltip::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #1A1A2E;
+}
+
 .whatsapp-float:hover .whatsapp-tooltip {
   opacity: 1;
   visibility: visible;
   right: 76px;
 }
 
-/* Animation d'entrée */
+/* ========== KEYFRAMES ========== */
+
+/* Pop d'entrée */
 @keyframes whatsapp-pop {
   0% { transform: scale(0); opacity: 0; }
-  80% { transform: scale(1.1); }
+  60% { transform: scale(1.2); }
   100% { transform: scale(1); opacity: 1; }
 }
 
-.whatsapp-float {
-  animation: whatsapp-pop 0.5s ease 1s both;
+/* Pulse permanent (battement de cœur) */
+@keyframes whatsapp-pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  }
+  50% { 
+    transform: scale(1.08); 
+    box-shadow: 0 6px 30px rgba(37, 211, 102, 0.7);
+  }
 }
 
-/* Mobile : ajustement */
+/* Vibration au clic */
+@keyframes whatsapp-shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  10% { transform: translateX(-4px) rotate(-3deg); }
+  20% { transform: translateX(4px) rotate(3deg); }
+  30% { transform: translateX(-4px) rotate(-2deg); }
+  40% { transform: translateX(4px) rotate(2deg); }
+  50% { transform: translateX(-2px) rotate(-1deg); }
+  60% { transform: translateX(2px) rotate(1deg); }
+  70% { transform: translateX(-1px) rotate(0deg); }
+  80% { transform: translateX(1px) rotate(0deg); }
+  90% { transform: translateX(0) rotate(0deg); }
+}
+
+/* Léger rebond de l'icône */
+@keyframes whatsapp-icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Mobile */
 @media (max-width: 600px) {
   .whatsapp-float {
     width: 54px;
@@ -450,7 +550,7 @@
     height: 28px;
   }
   .whatsapp-tooltip {
-    display: none; /* Cache le tooltip sur mobile */
+    display: none;
   }
 }
 </style>
