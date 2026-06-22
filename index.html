@@ -553,59 +553,171 @@
     display: none;
   }
 }
-  /* ═══════════════════════ FLIPBOOK PDF ═══════════════════════ */
+/* ═══════════════════════ FLIPBOOK 3D TURN.JS ═══════════════════════ */
 
 .flipbook-section {
-  padding: 40px 0;
+  padding: 60px 40px;
   background: linear-gradient(135deg, #FAF7F0 0%, #F0E6D3 100%);
   text-align: center;
 }
 
-.flipbook-section h2 {
-  font-size: clamp(22px, 5vw, 32px);
+.flipbook-section .section-header {
+  margin-bottom: 40px;
+  border-bottom: none;
+}
+
+.flipbook-section .section-title {
   color: #0D1B3E;
-  margin-bottom: 8px;
-  padding: 0 20px;
 }
 
-.flipbook-section h2 span {
-  color: #C9922A;
-  font-style: italic;
-}
-
-.flipbook-sub {
+.flipbook-section .section-desc {
   color: #6B6A62;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  margin-bottom: 24px;
-  padding: 0 20px;
 }
 
-.pdf-fullscreen {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
+/* Conteneur du flipbook */
+.flipbook-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  perspective: 2000px;
+}
+
+/* Le flipbook Turn.js */
+#flipbook {
+  margin: 0 auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+#flipbook .page {
   background: #fff;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
   overflow: hidden;
-  position: relative;
 }
 
-.pdf-viewer {
+#flipbook .page img {
   width: 100%;
-  height: 85vh;
-  min-height: 500px;
-  border: none;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
 
-.pdf-hint {
+/* Pages hard (couvertures) */
+#flipbook .hard {
+  background: #0D1B3E !important;
+  color: #FAF7F0;
+}
+
+#flipbook .hard.cover-front,
+#flipbook .hard.cover-back {
+  background: linear-gradient(135deg, #0D1B3E 0%, #1a2d5c 100%) !important;
+}
+
+#flipbook .hard img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+/* Effet de reliure au centre */
+#flipbook .even {
+  background: linear-gradient(to right, #f5f5f5 0%, #fff 5%);
+}
+
+#flipbook .odd {
+  background: linear-gradient(to left, #f5f5f5 0%, #fff 5%);
+}
+
+/* Ombre de page tournée */
+#flipbook .shadow {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Contrôles */
+.flipbook-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.flip-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0D1B3E;
+  color: #FAF7F0;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.flip-btn:hover {
+  background: #C9922A;
+  color: #0D1B3E;
+  transform: translateY(-2px);
+}
+
+.flip-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.flip-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.page-counter {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #6B6A62;
+  min-width: 120px;
+}
+
+.spread-label {
+  display: block;
+  font-size: 11px;
+  color: #9E9C94;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.flipbook-hint {
   font-family: Arial, sans-serif;
   font-size: 13px;
   color: #9E9C94;
-  margin: 16px 0 8px;
+  margin-top: 20px;
 }
 
-.btn-download {
+/* CTA sous le flipbook */
+.flipbook-cta {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(201,146,42,0.2);
+}
+
+.flipbook-cta p {
+  font-size: 18px;
+  color: #0D1B3E;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.flipbook-cta strong {
+  color: #C9922A;
+}
+
+.btn-gold {
   display: inline-block;
   background: #C9922A;
   color: #0D1B3E;
@@ -615,20 +727,19 @@
   font-family: Arial, sans-serif;
   font-weight: 700;
   font-size: 14px;
-  margin-top: 8px;
   transition: all 0.3s ease;
 }
 
-.btn-download:hover {
+.btn-gold:hover {
   background: #F0C97A;
   transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(201,146,42,0.3);
 }
 
-/* ═══════════════════════ BOUTON RETOUR FLOTTANT ═══════════════════════ */
-
+/* Bouton retour flottant */
 .btn-retour-float {
   position: fixed;
-  bottom: 100px; /* Au-dessus du badge WhatsApp */
+  bottom: 100px;
   right: 24px;
   background: #0D1B3E;
   color: #FAF7F0;
@@ -651,12 +762,6 @@
   background: #C9922A;
   color: #0D1B3E;
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(201, 146, 42, 0.4);
-}
-
-.btn-retour-float svg {
-  width: 18px;
-  height: 18px;
 }
 
 @keyframes retour-pop {
@@ -667,23 +772,35 @@
 
 /* ═══════════════════════ RESPONSIVE MOBILE ═══════════════════════ */
 
+@media (max-width: 900px) {
+  #flipbook {
+    transform: scale(0.8);
+  }
+}
+
 @media (max-width: 768px) {
   .flipbook-section {
-    padding: 20px 0;
+    padding: 40px 20px;
   }
   
-  .flipbook-section h2 {
-    font-size: 20px;
+  #flipbook {
+    transform: scale(0.6);
+    transform-origin: center top;
   }
   
-  .pdf-viewer {
-    height: 90vh;
-    min-height: 400px;
+  .flipbook-controls {
+    gap: 15px;
+    margin-top: 20px;
   }
   
-  .pdf-hint {
+  .flip-btn {
+    padding: 10px 16px;
     font-size: 12px;
-    margin: 12px 0;
+  }
+  
+  .page-counter {
+    font-size: 12px;
+    min-width: 100px;
   }
   
   .btn-retour-float {
@@ -692,17 +809,15 @@
     padding: 10px 16px;
     font-size: 12px;
   }
-  
-  .btn-retour-float svg {
-    width: 16px;
-    height: 16px;
-  }
 }
 
 @media (max-width: 480px) {
-  .pdf-viewer {
-    height: 92vh;
-    min-height: 350px;
+  #flipbook {
+    transform: scale(0.45);
+  }
+  
+  .flipbook-cta p {
+    font-size: 16px;
   }
   
   .btn-retour-float {
@@ -1114,33 +1229,204 @@
   
   <span class="whatsapp-tooltip">Une question ? Écrivez-nous !</span>
 </a>
-<!-- ═══════════════════════ SECTION FLIPBOOK PDF ═══════════════════════ -->
+<!-- ═══════════════════════ SECTION FLIPBOOK ═══════════════════════ -->
 <section class="flipbook-section" id="extrait">
-  <h2>Feuilletez l'histoire de <span>Layla</span></h2>
-  <p class="flipbook-sub">Un aperçu de ce que votre enfant découvrira dans son livre</p>
-  
-  <div class="pdf-fullscreen">
-    <iframe 
-      src="https://drive.google.com/file/d/1ytNn4LSYaQebE8cBptWkrxEj1_c2Vv8d/preview" 
-      class="pdf-viewer"
-      title="Extrait livre Qissa"
-      allowfullscreen>
-    </iframe>
+  <div class="section-header">
+    <div class="section-eyebrow">Aperçu exclusif</div>
+    <h2 class="section-title">Feuilletez l'histoire de <span>Layla</span></h2>
+    <p class="section-desc">Un extrait de ce que votre enfant découvrira dans son livre personnalisé</p>
   </div>
-  
-  <p class="pdf-hint">👆 Zoomez et faites glisser pour lire</p>
-  
-  <a href="https://drive.google.com/uc?export=download&id=1ytNn4LSYaQebE8cBptWkrxEj1_c2Vv8d" download class="btn-download">
-    📥 Télécharger l'extrait
-  </a>
+
+  <div class="flipbook-wrapper">
+    <div id="flipbook">
+      <!-- Couverture (seule) -->
+      <div class="hard cover-front">
+        <img src="flipbook/page-01.jpg" alt="Couverture - Les Aventures de Layla">
+      </div>
+      
+      <!-- Page blanche intérieure couverture -->
+      <div class="hard"></div>
+      
+      <!-- Pages intérieures (par paire) -->
+      <div><img src="flipbook/page-02.jpg" alt="Page 1"></div>
+      <div><img src="flipbook/page-03.jpg" alt="Page 2"></div>
+      
+      <div><img src="flipbook/page-04.jpg" alt="Page 3"></div>
+      <div><img src="flipbook/page-05.jpg" alt="Page 4"></div>
+      
+      <div><img src="flipbook/page-06.jpg" alt="Page 5"></div>
+      <div><img src="flipbook/page-07.jpg" alt="Page 6"></div>
+      
+      <div><img src="flipbook/page-08.jpg" alt="Page 7"></div>
+      <div><img src="flipbook/page-09.jpg" alt="Page 8"></div>
+      
+      <div><img src="flipbook/page-10.jpg" alt="Page 9"></div>
+      <div><img src="flipbook/page-11.jpg" alt="Page 10"></div>
+      
+      <div><img src="flipbook/page-12.jpg" alt="Page 11"></div>
+      <div><img src="flipbook/page-13.jpg" alt="Page 12"></div>
+      
+      <!-- Page blanche intérieure dos -->
+      <div class="hard"></div>
+      
+      <!-- Dos couverture -->
+      <div class="hard cover-back">
+        <img src="flipbook/page-14.jpg" alt="Dos - Qissa">
+      </div>
+    </div>
+  </div>
+
+  <!-- Contrôles -->
+  <div class="flipbook-controls">
+    <button class="flip-btn" id="prevBtn" aria-label="Page précédente">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Précédent
+    </button>
+    
+    <div class="page-counter">
+      <span id="currentSpread">1</span> / <span id="totalSpreads">7</span>
+      <span class="spread-label">double-pages</span>
+    </div>
+    
+    <button class="flip-btn" id="nextBtn" aria-label="Page suivante">
+      Suivant
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+  <p class="flipbook-hint">
+    👆 Cliquez sur les coins des pages ou utilisez les flèches pour feuilleter
+  </p>
+
+  <!-- CTA -->
+  <div class="flipbook-cta">
+    <p>Et si c'était <strong>votre enfant</strong> le héros de l'histoire ?</p>
+    <a href="#commander" class="btn-gold">Commander mon livre</a>
+  </div>
 </section>
 
 <!-- ═══════════════════════ BOUTON RETOUR FLOTTANT ═══════════════════════ -->
 <a href="#commander" class="btn-retour-float" aria-label="Retour à la commande">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
     <path d="M19 12H5M12 19l-7-7 7-7"/>
   </svg>
   Commander
 </a>
+  <!-- ═══════════════════════ SCRIPTS TURN.JS ═══════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  
+  // Dimensions du flipbook
+  var flipbookWidth = 800;
+  var flipbookHeight = 500;
+  
+  // Responsive
+  if ($(window).width() < 768) {
+    flipbookWidth = 600;
+    flipbookHeight = 375;
+  }
+  if ($(window).width() < 480) {
+    flipbookWidth = 400;
+    flipbookHeight = 250;
+  }
+  
+  // Initialisation Turn.js
+  var $flipbook = $('#flipbook');
+  
+  $flipbook.turn({
+    width: flipbookWidth,
+    height: flipbookHeight,
+    autoCenter: true,
+    display: 'double',        // ← DEUX PAGES VISIBLES
+    acceleration: true,
+    gradients: true,          // ← Effet de dégradé sur les pages tournées
+    elevation: 50,            // ← Épaisseur du livre
+    duration: 1000,           // ← Durée de l'animation (ms)
+    pages: 16,                // ← Total des pages (14 images + 2 hard vides)
+    when: {
+      turning: function(event, page, view) {
+        // Animation pendant le tour de page
+        console.log('Tourne vers la page', page);
+      },
+      turned: function(event, page, view) {
+        // Mise à jour du compteur
+        updateCounter(page);
+      }
+    }
+  });
+  
+  // Compteur de double-pages
+  function updateCounter(page) {
+    var totalPages = $flipbook.turn('pages');
+    var currentSpread = Math.ceil(page / 2);
+    var totalSpreads = Math.ceil(totalPages / 2);
+    
+    $('#currentSpread').text(currentSpread);
+    $('#totalSpreads').text(totalSpreads);
+    
+    // Active/désactive les boutons
+    $('#prevBtn').prop('disabled', page <= 1);
+    $('#nextBtn').prop('disabled', page >= totalPages);
+  }
+  
+  // Bouton Précédent
+  $('#prevBtn').click(function() {
+    $flipbook.turn('previous');
+  });
+  
+  // Bouton Suivant
+  $('#nextBtn').click(function() {
+    $flipbook.turn('next');
+  });
+  
+  // Clic sur les coins pour tourner (natif Turn.js)
+  // + support clavier
+  $(document).keydown(function(e) {
+    if (e.keyCode === 37) { // Flèche gauche
+      $flipbook.turn('previous');
+    }
+    if (e.keyCode === 39) { // Flèche droite
+      $flipbook.turn('next');
+    }
+  });
+  
+  // Swipe sur mobile
+  var touchStartX = 0;
+  var touchEndX = 0;
+  
+  $flipbook.on('touchstart', function(e) {
+    touchStartX = e.originalEvent.changedTouches[0].screenX;
+  });
+  
+  $flipbook.on('touchend', function(e) {
+    touchEndX = e.originalEvent.changedTouches[0].screenX;
+    handleSwipe();
+  });
+  
+  function handleSwipe() {
+    var swipeThreshold = 50;
+    var diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        $flipbook.turn('next');      // Swipe gauche = page suivante
+      } else {
+        $flipbook.turn('previous');  // Swipe droite = page précédente
+      }
+    }
+  }
+  
+  // Initialisation du compteur
+  updateCounter(1);
+  
+});
+</script>
 </body>
 </html>
