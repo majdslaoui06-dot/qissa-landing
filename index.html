@@ -583,41 +583,62 @@
   perspective: 2000px;
 }
 
-/* Le flipbook Turn.js */
+/* Le flipbook Turn.js - TOUT CARRÉ */
 #flipbook {
   margin: 0 auto;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 
+/* Toutes les pages - FORMAT CARRÉ */
 #flipbook .page {
+  width: 500px !important;
+  height: 500px !important;
   background: #fff;
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
   overflow: hidden;
+  position: relative;
 }
 
-#flipbook .page img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-/* Pages hard (couvertures) */
+/* Couvertures (pages hard) */
 #flipbook .hard {
   background: #0D1B3E !important;
-  color: #FAF7F0;
 }
 
-#flipbook .hard.cover-front,
-#flipbook .hard.cover-back {
+#flipbook .hard.cover-front {
   background: linear-gradient(135deg, #0D1B3E 0%, #1a2d5c 100%) !important;
 }
 
-#flipbook .hard img {
+#flipbook .hard.cover-back {
+  background: linear-gradient(135deg, #1a2d5c 0%, #0D1B3E 100%) !important;
+}
+
+/* Images dans les pages - CARRÉ PLEIN */
+#flipbook .page img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 20px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Pages intérieures blanches */
+.blank-page {
+  width: 100%;
+  height: 100%;
+  background: #f8f8f8;
+}
+
+/* Pages normales (carrées) */
+.page-square {
+  background: #fff;
+}
+
+/* Intérieur couverture */
+.inside-cover {
+  background: #f0f0f0 !important;
+}
+
+/* Ombre de page tournée */
+#flipbook .shadow {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 /* Effet de reliure au centre */
@@ -629,12 +650,52 @@
   background: linear-gradient(to left, #f5f5f5 0%, #fff 5%);
 }
 
-/* Ombre de page tournée */
-#flipbook .shadow {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+/* ═══ EFFET 3D RENFORCÉ ═══ */
+
+/* Ombre portée sur les pages en mouvement */
+#flipbook .page-wrapper {
+  perspective: 1500px;
 }
 
-/* Contrôles */
+#flipbook .page-wrapper .page {
+  box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+}
+
+#flipbook .page-wrapper .page.flipped {
+  box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+}
+
+/* Effet de profondeur sur la reliure */
+#flipbook .turn-page-wrapper {
+  transform-style: preserve-3d;
+}
+
+/* Page en cours de tournage - effet courbure */
+#flipbook .turning {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
+}
+
+/* Gradient sur le bord des pages pour effet épaisseur */
+#flipbook .page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.08) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+#flipbook .page.flipped::before {
+  left: auto;
+  right: 0;
+  background: linear-gradient(to left, rgba(0,0,0,0.08) 0%, transparent 100%);
+}
+
+/* ═══ CONTRÔLES ═══ */
+
 .flipbook-controls {
   display: flex;
   justify-content: center;
@@ -678,9 +739,10 @@
 
 .page-counter {
   font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #6B6A62;
-  min-width: 120px;
+  font-size: 16px;
+  color: #0D1B3E;
+  font-weight: 600;
+  min-width: 150px;
 }
 
 .spread-label {
@@ -689,17 +751,19 @@
   color: #9E9C94;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-top: 2px;
+  margin-top: 4px;
+  font-weight: 400;
 }
 
 .flipbook-hint {
   font-family: Arial, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   color: #9E9C94;
   margin-top: 20px;
 }
 
-/* CTA sous le flipbook */
+/* ═══ CTA ═══ */
+
 .flipbook-cta {
   margin-top: 40px;
   padding-top: 30px;
@@ -736,7 +800,8 @@
   box-shadow: 0 4px 20px rgba(201,146,42,0.3);
 }
 
-/* Bouton retour flottant */
+/* ═══ BOUTON RETOUR FLOTTANT ═══ */
+
 .btn-retour-float {
   position: fixed;
   bottom: 100px;
@@ -768,6 +833,67 @@
   0% { transform: scale(0); opacity: 0; }
   80% { transform: scale(1.1); }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* ═══════════════════════ RESPONSIVE CARRÉ ═══════════════════════ */
+
+@media (max-width: 1100px) {
+  #flipbook {
+    transform: scale(0.9);
+    transform-origin: center top;
+  }
+}
+
+@media (max-width: 900px) {
+  #flipbook {
+    transform: scale(0.75);
+  }
+}
+
+@media (max-width: 768px) {
+  .flipbook-section {
+    padding: 40px 20px;
+  }
+  
+  #flipbook {
+    transform: scale(0.6);
+  }
+  
+  .flipbook-controls {
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .flip-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+  
+  .page-counter {
+    font-size: 14px;
+    min-width: 120px;
+  }
+  
+  .btn-retour-float {
+    bottom: 90px;
+    right: 16px;
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  #flipbook {
+    transform: scale(0.45);
+  }
+  
+  .flipbook-cta p {
+    font-size: 16px;
+  }
+  
+  .btn-retour-float {
+    bottom: 86px;
+  }
 }
 
 /* ═══════════════════════ RESPONSIVE MOBILE ═══════════════════════ */
@@ -1229,56 +1355,20 @@
   
   <span class="whatsapp-tooltip">Une question ? Écrivez-nous !</span>
 </a>
-<!-- ═══════════════════════ SECTION FLIPBOOK ═══════════════════════ -->
+<!-- ═══════════════════════ FLIPBOOK 3D THREE.JS ═══════════════════════ -->
 <section class="flipbook-section" id="extrait">
   <div class="section-header">
-    <div class="section-eyebrow">Aperçu exclusif</div>
+    <div class="section-eyebrow">Aperçu exclusif 3D</div>
     <h2 class="section-title">Feuilletez l'histoire de <span>Layla</span></h2>
-    <p class="section-desc">Un extrait de ce que votre enfant découvrira dans son livre personnalisé</p>
+    <p class="section-desc">Un livre 3D interactif — cliquez et faites glisser pour tourner les pages</p>
   </div>
 
-  <div class="flipbook-wrapper">
-    <div id="flipbook">
-      <!-- Couverture (seule) -->
-      <div class="hard cover-front">
-        <img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/1.png" alt="Couverture - Les Aventures de Layla">
-      </div>
-      
-      <!-- Page blanche intérieure couverture -->
-      <div class="hard"></div>
-      
-      <!-- Pages intérieures (par paire) -->
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/2.png"></div>
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/3.png" alt="Page 2"></div>
-      
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/4.png" alt="Page 3"></div>
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/5.png" alt="Page 4"></div>
-      
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/6.png" alt="Page 5"></div>
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/7.png" alt="Page 6"></div>
-      
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/8.png" alt="Page 7"></div>
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/9.png" alt="Page 8"></div>
-      
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/10.png" alt="Page 9"></div>
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/11.png" alt="Page 10"></div>
-      
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/12.png" alt="Page 11"></div>
-      <div><img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/13.png" alt="Page 12"></div>
-      
-      <!-- Page blanche intérieure dos -->
-      <div class="hard"></div>
-      
-      <!-- Dos couverture -->
-      <div class="hard cover-back">
-        <img src="https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/14.png" alt="Dos - Qissa">
-      </div>
-    </div>
+  <div class="book-3d-container">
+    <div id="book-3d"></div>
   </div>
 
-  <!-- Contrôles -->
   <div class="flipbook-controls">
-    <button class="flip-btn" id="prevBtn" aria-label="Page précédente">
+    <button class="flip-btn" id="prevBtn3d" aria-label="Page précédente">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M19 12H5M12 19l-7-7 7-7"/>
       </svg>
@@ -1286,11 +1376,10 @@
     </button>
     
     <div class="page-counter">
-      <span id="currentSpread">1</span> / <span id="totalSpreads">7</span>
-      <span class="spread-label">double-pages</span>
+      <span id="currentPage3d">Couverture</span>
     </div>
     
-    <button class="flip-btn" id="nextBtn" aria-label="Page suivante">
+    <button class="flip-btn" id="nextBtn3d" aria-label="Page suivante">
       Suivant
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -1299,10 +1388,9 @@
   </div>
 
   <p class="flipbook-hint">
-    👆 Cliquez sur les coins des pages ou utilisez les flèches pour feuilleter
+    👆 Cliquez sur le livre ou utilisez les flèches pour feuilleter
   </p>
 
-  <!-- CTA -->
   <div class="flipbook-cta">
     <p>Et si c'était <strong>votre enfant</strong> le héros de l'histoire ?</p>
     <a href="#commander" class="btn-gold">Commander mon livre</a>
@@ -1316,117 +1404,246 @@
   </svg>
   Commander
 </a>
-  <!-- ═══════════════════════ SCRIPTS TURN.JS ═══════════════════════ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+  <!-- ═══════════════════════ SCRIPTS 3D ═══════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-$(document).ready(function() {
+// Configuration
+const BOOK_WIDTH = 500;
+const BOOK_HEIGHT = 500;
+const PAGE_THICKNESS = 2;
+const COVER_THICKNESS = 8;
+
+// URLs des images
+const pages = [
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/1.png',   // Couverture
+  null, // Blanc intérieur
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/2.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/3.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/4.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/5.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/6.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/7.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/8.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/9.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/10.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/11.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/12.png',
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/13.png',
+  null, // Blanc intérieur dos
+  'https://raw.githubusercontent.com/majdslaoui06-dot/qissa-landing/refs/heads/main/flipbook/14.png'    // Dos
+];
+
+let currentPage = 0;
+let isAnimating = false;
+
+// Scene Three.js
+const container = document.getElementById('book-3d');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf5f0e8);
+
+const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 1000);
+camera.position.set(0, 300, 600);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+container.appendChild(renderer.domElement);
+
+// Lumières
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+directionalLight.position.set(200, 300, 200);
+directionalLight.castShadow = true;
+scene.add(directionalLight);
+
+// Groupe du livre
+const bookGroup = new THREE.Group();
+scene.add(bookGroup);
+
+// Texture loader
+const textureLoader = new THREE.TextureLoader();
+
+// Créer une page
+function createPage(width, height, textureUrl, isCover = false) {
+  const thickness = isCover ? COVER_THICKNESS : PAGE_THICKNESS;
   
-  // Dimensions du flipbook
-  var flipbookWidth = 800;
-  var flipbookHeight = 500;
+  // Géométrie de la page avec courbure
+  const geometry = new THREE.BoxGeometry(width, height, thickness, 20, 20, 1);
   
-  // Responsive
-  if ($(window).width() < 768) {
-    flipbookWidth = 600;
-    flipbookHeight = 375;
+  // Matériaux
+  const materials = [];
+  
+  // Face avant (image)
+  if (textureUrl) {
+    const texture = textureLoader.load(textureUrl);
+    texture.minFilter = THREE.LinearFilter;
+    materials.push(new THREE.MeshStandardMaterial({ 
+      map: texture,
+      roughness: 0.4,
+      metalness: 0.1
+    }));
+  } else {
+    materials.push(new THREE.MeshStandardMaterial({ 
+      color: 0xf8f8f8,
+      roughness: 0.8 
+    }));
   }
-  if ($(window).width() < 480) {
-    flipbookWidth = 400;
-    flipbookHeight = 250;
+  
+  // Face arrière (blanc ou image suivante)
+  materials.push(new THREE.MeshStandardMaterial({ 
+    color: 0xf8f8f8,
+    roughness: 0.8 
+  }));
+  
+  // Tranche (crème pour pages, bleu pour couverture)
+  const edgeColor = isCover ? 0x0D1B3E : 0xf0e6d3;
+  for (let i = 0; i < 4; i++) {
+    materials.push(new THREE.MeshStandardMaterial({ 
+      color: edgeColor,
+      roughness: 0.6 
+    }));
   }
   
-  // Initialisation Turn.js
-  var $flipbook = $('#flipbook');
+  const page = new THREE.Mesh(geometry, materials);
+  page.castShadow = true;
+  page.receiveShadow = true;
   
-  $flipbook.turn({
-    width: flipbookWidth,
-    height: flipbookHeight,
-    autoCenter: true,
-    display: 'double',        // ← DEUX PAGES VISIBLES
-    acceleration: true,
-    gradients: true,          // ← Effet de dégradé sur les pages tournées
-    elevation: 50,            // ← Épaisseur du livre
-    duration: 1000,           // ← Durée de l'animation (ms)
-    pages: 16,                // ← Total des pages (14 images + 2 hard vides)
-    when: {
-      turning: function(event, page, view) {
-        // Animation pendant le tour de page
-        console.log('Tourne vers la page', page);
-      },
-      turned: function(event, page, view) {
-        // Mise à jour du compteur
-        updateCounter(page);
-      }
-    }
-  });
+  return page;
+}
+
+// Créer le livre
+const pagesMeshes = [];
+const pageWidth = BOOK_WIDTH;
+const pageHeight = BOOK_HEIGHT;
+
+// Créer toutes les pages
+for (let i = 0; i < pages.length; i++) {
+  const isCover = (i === 0 || i === pages.length - 1);
+  const page = createPage(pageWidth, pageHeight, pages[i], isCover);
   
-  // Compteur de double-pages
-  function updateCounter(page) {
-    var totalPages = $flipbook.turn('pages');
-    var currentSpread = Math.ceil(page / 2);
-    var totalSpreads = Math.ceil(totalPages / 2);
+  // Position initiale
+  page.position.x = 0;
+  page.position.y = 0;
+  page.position.z = i * (isCover ? COVER_THICKNESS : PAGE_THICKNESS);
+  
+  // Pivot pour la rotation (côté gauche)
+  page.geometry.translate(pageWidth / 2, 0, 0);
+  
+  pagesMeshes.push(page);
+  bookGroup.add(page);
+}
+
+// Positionner le livre
+bookGroup.position.y = -50;
+
+// Contrôles
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.minDistance = 400;
+controls.maxDistance = 800;
+controls.maxPolarAngle = Math.PI / 2;
+
+// Animation de tournage de page
+function flipPage(direction) {
+  if (isAnimating) return;
+  if (direction === 'next' && currentPage >= pages.length - 2) return;
+  if (direction === 'prev' && currentPage <= 0) return;
+  
+  isAnimating = true;
+  
+  const pageIndex = direction === 'next' ? currentPage : currentPage - 1;
+  const page = pagesMeshes[pageIndex];
+  
+  const targetRotation = direction === 'next' ? -Math.PI : 0;
+  const startRotation = page.rotation.y;
+  const duration = 800;
+  const start = Date.now();
+  
+  function animate() {
+    const elapsed = Date.now() - start;
+    const progress = Math.min(elapsed / duration, 1);
     
-    $('#currentSpread').text(currentSpread);
-    $('#totalSpreads').text(totalSpreads);
+    // Easing
+    const ease = 1 - Math.pow(1 - progress, 3);
     
-    // Active/désactive les boutons
-    $('#prevBtn').prop('disabled', page <= 1);
-    $('#nextBtn').prop('disabled', page >= totalPages);
-  }
-  
-  // Bouton Précédent
-  $('#prevBtn').click(function() {
-    $flipbook.turn('previous');
-  });
-  
-  // Bouton Suivant
-  $('#nextBtn').click(function() {
-    $flipbook.turn('next');
-  });
-  
-  // Clic sur les coins pour tourner (natif Turn.js)
-  // + support clavier
-  $(document).keydown(function(e) {
-    if (e.keyCode === 37) { // Flèche gauche
-      $flipbook.turn('previous');
-    }
-    if (e.keyCode === 39) { // Flèche droite
-      $flipbook.turn('next');
-    }
-  });
-  
-  // Swipe sur mobile
-  var touchStartX = 0;
-  var touchEndX = 0;
-  
-  $flipbook.on('touchstart', function(e) {
-    touchStartX = e.originalEvent.changedTouches[0].screenX;
-  });
-  
-  $flipbook.on('touchend', function(e) {
-    touchEndX = e.originalEvent.changedTouches[0].screenX;
-    handleSwipe();
-  });
-  
-  function handleSwipe() {
-    var swipeThreshold = 50;
-    var diff = touchStartX - touchEndX;
+    page.rotation.y = startRotation + (targetRotation - startRotation) * ease;
     
-    if (Math.abs(diff) > swipeThreshold) {
-      if (diff > 0) {
-        $flipbook.turn('next');      // Swipe gauche = page suivante
-      } else {
-        $flipbook.turn('previous');  // Swipe droite = page précédente
-      }
+    // Courbure de la page pendant le mouvement
+    const bend = Math.sin(progress * Math.PI) * 0.3;
+    page.rotation.z = bend * (direction === 'next' ? 1 : -1);
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      page.rotation.z = 0;
+      currentPage += direction === 'next' ? 2 : -2;
+      isAnimating = false;
+      updateCounter3d();
     }
   }
   
-  // Initialisation du compteur
-  updateCounter(1);
+  animate();
+}
+
+// Mise à jour du compteur
+function updateCounter3d() {
+  const counter = document.getElementById('currentPage3d');
   
+  if (currentPage === 0) {
+    counter.textContent = 'Couverture';
+  } else if (currentPage >= pages.length - 2) {
+    counter.textContent = 'Dos';
+  } else {
+    const spreadNum = Math.floor(currentPage / 2) + 1;
+    const totalSpreads = Math.floor(pages.length / 2);
+    counter.textContent = `Pages ${spreadNum} / ${totalSpreads}`;
+  }
+  
+  document.getElementById('prevBtn3d').disabled = currentPage <= 0;
+  document.getElementById('nextBtn3d').disabled = currentPage >= pages.length - 2;
+}
+
+// Boutons
+document.getElementById('nextBtn3d').addEventListener('click', () => flipPage('next'));
+document.getElementById('prevBtn3d').addEventListener('click', () => flipPage('prev'));
+
+// Clic sur le livre
+renderer.domElement.addEventListener('click', (e) => {
+  const rect = renderer.domElement.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  
+  if (x > 0) {
+    flipPage('next');
+  } else {
+    flipPage('prev');
+  }
 });
+
+// Animation loop
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// Resize
+window.addEventListener('resize', () => {
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+});
+
+// Démarrer
+animate();
+updateCounter3d();
 </script>
 </body>
 </html>
