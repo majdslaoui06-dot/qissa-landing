@@ -553,6 +553,162 @@
     display: none;
   }
 }
+  /* ═══════════════════════ FLIPBOOK PDF ═══════════════════════ */
+
+.flipbook-section {
+  padding: 40px 0;
+  background: linear-gradient(135deg, #FAF7F0 0%, #F0E6D3 100%);
+  text-align: center;
+}
+
+.flipbook-section h2 {
+  font-size: clamp(22px, 5vw, 32px);
+  color: #0D1B3E;
+  margin-bottom: 8px;
+  padding: 0 20px;
+}
+
+.flipbook-section h2 span {
+  color: #C9922A;
+  font-style: italic;
+}
+
+.flipbook-sub {
+  color: #6B6A62;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  margin-bottom: 24px;
+  padding: 0 20px;
+}
+
+.pdf-fullscreen {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  background: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+.pdf-viewer {
+  width: 100%;
+  height: 85vh;
+  min-height: 500px;
+  border: none;
+  display: block;
+}
+
+.pdf-hint {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #9E9C94;
+  margin: 16px 0 8px;
+}
+
+.btn-download {
+  display: inline-block;
+  background: #C9922A;
+  color: #0D1B3E;
+  padding: 14px 32px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+  background: #F0C97A;
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════ BOUTON RETOUR FLOTTANT ═══════════════════════ */
+
+.btn-retour-float {
+  position: fixed;
+  bottom: 100px; /* Au-dessus du badge WhatsApp */
+  right: 24px;
+  background: #0D1B3E;
+  color: #FAF7F0;
+  padding: 12px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(13, 27, 62, 0.4);
+  z-index: 999;
+  transition: all 0.3s ease;
+  animation: retour-pop 0.5s ease 2s both;
+}
+
+.btn-retour-float:hover {
+  background: #C9922A;
+  color: #0D1B3E;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(201, 146, 42, 0.4);
+}
+
+.btn-retour-float svg {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes retour-pop {
+  0% { transform: scale(0); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ═══════════════════════ RESPONSIVE MOBILE ═══════════════════════ */
+
+@media (max-width: 768px) {
+  .flipbook-section {
+    padding: 20px 0;
+  }
+  
+  .flipbook-section h2 {
+    font-size: 20px;
+  }
+  
+  .pdf-viewer {
+    height: 90vh;
+    min-height: 400px;
+  }
+  
+  .pdf-hint {
+    font-size: 12px;
+    margin: 12px 0;
+  }
+  
+  .btn-retour-float {
+    bottom: 90px;
+    right: 16px;
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+  
+  .btn-retour-float svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pdf-viewer {
+    height: 92vh;
+    min-height: 350px;
+  }
+  
+  .btn-retour-float {
+    bottom: 86px;
+  }
+}
 </style>
 </head>
 <body>
@@ -957,6 +1113,33 @@
   </svg>
   
   <span class="whatsapp-tooltip">Une question ? Écrivez-nous !</span>
+</a>
+  <!-- ═══════════════════════ SECTION FLIPBOOK PDF ═══════════════════════ -->
+<section class="flipbook-section" id="extrait">
+  <h2>Feuilletez l'histoire de <span>Layla</span></h2>
+  <p class="flipbook-sub">Un aperçu de ce que votre enfant découvrira dans son livre</p>
+  
+  <div class="pdf-fullscreen">
+    <iframe 
+      src="extrait-layla.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
+      class="pdf-viewer"
+      title="Extrait livre Qissa">
+    </iframe>
+  </div>
+  
+  <p class="pdf-hint">👆 Zoomez et faites glisser pour lire</p>
+  
+  <a href="extrait-layla.pdf" download class="btn-download">
+    📥 Télécharger l'extrait
+  </a>
+</section>
+
+<!-- ═══════════════════════ BOUTON RETOUR FLOTTANT ═══════════════════════ -->
+<a href="#commander" class="btn-retour-float" aria-label="Retour à la commande">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  Commander
 </a>
 </body>
 </html>
