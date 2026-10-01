@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Atelier · Qissa</title><meta content="Espace interne" name="description"/><meta content="#16215C" name="theme-color"/><meta content="noindex,nofollow" name="robots"/><meta content="website" property="og:type"/><meta content="Atelier · Qissa" property="og:title"/><meta content="Espace interne" property="og:description"/><meta content="https://qissamagic.com/assets/cover-anir.webp" property="og:image"/><meta content="fr_MA" property="og:locale"/><link href="assets/logo-qissa.png" rel="icon"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/><link href="style.css" rel="stylesheet"/></head><body><main class="atelier">
+<p><a href="index.html">← Retour au site</a></p>
+<h1>Atelier Qissa</h1>
+<p style="color:var(--muted)">Page interne : ne pas partager. Elle sert à suivre les commandes et à écrire aux clients.</p>
+<section class="panel" style="padding:20px">
+<h2 style="font-size:22px">1. Coller une commande WhatsApp</h2>
+<textarea id="paste" placeholder="Collez ici le message reçu sur WhatsApp" rows="9"></textarea>
+<div class="row"><button class="btn" id="parse" type="button">Lire la commande</button><button class="btn ghost" hidden="" id="dl" type="button">Télécharger order.json</button></div>
+<div id="res"></div>
+</section>
+<section class="panel" style="padding:20px">
+<h2 style="font-size:22px">2. Commandes reçues sur le serveur</h2>
+<div class="row">
+<input id="api" placeholder="Adresse du serveur (vide = ce site)" style="max-width:320px" type="text"/>
+<input autocomplete="off" id="tok" placeholder="Code Atelier (ADMIN_TOKEN)" style="max-width:260px" type="text"/>
+<button class="btn" id="load" type="button">Afficher</button>
+</div>
+<p class="err" id="srvmsg"></p>
+<div id="list"></div>
+</section>
+</main>
+<script src="config.js"></script><script src="atelier.js"></script></body></html>
