@@ -266,17 +266,18 @@
     h += '<div class="field"><label for="c-adr">Adresse de livraison</label><textarea id="c-adr" data-c="adr" rows="2" placeholder="Rue, numéro, quartier, un repère">' + esc(c.adr) + "</textarea></div></fieldset>";
     h += '<div class="total"><p><span>' + esc(o.nom) + "</span><span>" + money(o.prix) + "</span></p><p><span>Livraison</span><span>" + money(CFG.livraison) + '</span></p><p class="t"><span>À payer à la livraison</span><b>' + money(total()) + "</b></p></div>";
     h += '<p class="notice">' + ICON_WA + "Le jour même, vous recevez l’aperçu de son livre sur ce numéro WhatsApp.</p>";
-    h += '<p class="err" role="alert">' + esc(S.err) + '</p><div style="display:flex;flex-direction:column;gap:10px"><button class="btn wa big" type="submit">' + ICON_WA + 'Envoyer ma commande sur WhatsApp</button><p style="text-align:center;font-size:13px;font-weight:600;color:var(--muted)">WhatsApp s’ouvre avec votre commande déjà écrite. Il vous suffit d’appuyer sur Envoyer.</p></div></form>';
+    h += '<p class="err" role="alert">' + esc(S.err) + '</p><div style="display:flex;flex-direction:column;gap:10px"><button class="btn wa big" type="submit">' + ICON_WA + 'Confirmer ma commande et ouvrir WhatsApp</button><p style="text-align:center;font-size:13px;font-weight:600;color:var(--muted)">Votre commande est d’abord enregistrée chez Qissa. WhatsApp s’ouvre ensuite avec le message déjà préparé.</p></div></form>';
     return h;
   }
 
   function stepDone() {
     var msg = buildMessage(), url = waUrl(msg);
-    var h = '<div class="done"><span class="hand" style="font-size:26px">Merci !</span><h1 style="margin:0">Votre commande est prête à partir</h1>';
-    h += '<p style="color:var(--muted)">Appuyez sur Envoyer dans WhatsApp pour nous la transmettre. Votre référence :</p><p class="ref">' + esc(S.ref) + "</p>";
+    var h = '<div class="done"><span class="hand" style="font-size:26px">Merci !</span><h1 style="margin:0">Votre commande est bien enregistrée</h1>';
+    h += '<p style="color:var(--muted)">Qissa a déjà reçu votre commande. Votre référence :</p><p class="ref">' + esc(S.ref) + "</p>";
     h += '<a class="btn wa big" id="wa" href="' + url + '" target="_blank" rel="noopener">' + ICON_WA + "Ouvrir WhatsApp</a>";
-    h += '<p id="upl" style="font-size:14px;font-weight:700;color:var(--muted)">' + (S.uploaded === true ? "Vos photos sont bien arrivées." : S.uploaded === false ? "Vos photos n’ont pas pu être envoyées : envoyez-les nous sur WhatsApp avec votre commande." : nbPhotos() && S.serveur ? "Envoi de vos photos…" : "") + "</p>";
-    h += '<ol><li>Vous nous envoyez la commande sur WhatsApp.</li><li>Le jour même, vous recevez l’aperçu de son livre sur votre numéro.</li><li>Après votre accord, le livre est imprimé, puis livré chez vous.</li><li>Vous payez ' + money(total()) + " à la livraison.</li></ol>";
+    h += '<p style="font-size:13px;font-weight:600;color:var(--muted);text-align:center">WhatsApp est facultatif pour l’enregistrement : il permet simplement de poursuivre la conversation avec Qissa.</p>';
+    h += '<p id="upl" style="font-size:14px;font-weight:700;color:var(--muted)">' + (S.uploaded === true ? "Votre commande et vos photos sont bien arrivées." : S.uploaded === false ? "La commande n’a pas pu être enregistrée correctement." : nbPhotos() && S.serveur ? "Envoi de vos photos…" : "") + "</p>";
+    h += '<ol><li>Votre commande est déjà enregistrée chez Qissa.</li><li>Le jour même, vous recevez l’aperçu de son livre sur votre numéro WhatsApp.</li><li>Après votre accord, le livre est imprimé, puis livré chez vous.</li><li>Vous payez ' + money(total()) + " à la livraison.</li></ol>";
     if (!S.serveur && nbPhotos()) h += '<p class="info" style="text-align:left">' + ICON_WA + "N’oubliez pas de joindre vos photos dans la conversation WhatsApp, avec la référence " + esc(S.ref) + ".</p>";
     h += '<details style="width:100%;text-align:left"><summary style="cursor:pointer;font-weight:800">Le message n’a pas pu s’ouvrir ?</summary><div class="msg" id="msgtxt">' + esc(msg) + '</div><button class="btn ghost" type="button" data-copy style="margin-top:10px;height:44px">Copier le message</button></details>';
     h += '<a href="index.html" style="font-weight:800">Retour aux histoires</a></div>';
@@ -397,20 +398,25 @@
     else if (f === "3") {
       S.err = check3(); if (S.err) return rerender();
       var waWin = window.open("about:blank", "_blank");
-      var finish = function (uploaded) {
-        S.done = true; S.uploaded = uploaded; render();
-        var url = waUrl(buildMessage());
-        if (waWin && !waWin.closed) waWin.location.href = url;
-      };
+
+      // La commande doit être enregistrée dans le backend AVANT l’ouverture de WhatsApp.
+      // Ainsi, même si le client ferme WhatsApp ou n’envoie jamais le message,
+      // la commande reste déjà présente dans l’Atelier Qissa.
       if (S.serveur) {
         var submitBtn = e.target.querySelector('button[type="submit"]');
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Envoi de la commande…"; }
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Enregistrement de la commande…";
+        }
+
         upload().then(function (res) {
           if (res && res.ref) {
             S.ref = res.ref;
+            S.done = true;
+            S.uploaded = true;
 
-            // Meta : compter un achat uniquement après confirmation du serveur.
-            // Aucune donnée personnelle (nom, téléphone, photos, dédicace) n’est transmise.
+            // Meta : achat compté seulement après confirmation du backend.
+            // Aucune donnée personnelle n’est transmise à Meta.
             if (typeof window.fbq === "function") {
               window.fbq("track", "Purchase", {
                 value: total(),
@@ -421,14 +427,30 @@
               });
             }
 
-            finish(true);
+            // Affiche immédiatement la confirmation locale : la commande est déjà reçue.
+            render();
+
+            // WhatsApp vient seulement en deuxième étape.
+            var url = waUrl(buildMessage());
+            if (waWin && !waWin.closed) {
+              waWin.location.href = url;
+            }
           } else {
-            S.ref = newRef();
-            finish(false);
+            // Si le backend n’a PAS confirmé l’enregistrement, on ne prétend pas
+            // que la commande a été reçue et on n’ouvre pas WhatsApp automatiquement.
+            if (waWin && !waWin.closed) waWin.close();
+            S.err = "Impossible d’enregistrer votre commande pour le moment. Vérifiez votre connexion puis réessayez.";
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = ICON_WA + "Confirmer ma commande et ouvrir WhatsApp";
+            }
+            rerender();
           }
         });
       } else {
-        S.ref = newRef(); finish(false);
+        if (waWin && !waWin.closed) waWin.close();
+        S.err = "Le service de commande est temporairement indisponible. Réessayez dans quelques instants.";
+        rerender();
       }
     }
   });
