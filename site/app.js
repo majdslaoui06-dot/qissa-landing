@@ -1,44 +1,47 @@
 // Meta Pixel — Qissa Magic
 (function initQissaMetaPixel() {
-  if (window.location.pathname.includes('qissa-admin-')) {
-    return;
-  }
+  // Ne jamais suivre l’Atelier privé.
+  if (window.location.pathname.indexOf("qissa-admin-") !== -1) return;
+  if (window.fbq) return;
 
-  if (window.fbq) {
-    return;
-  }
-
-  !function(f,b,e,v,n,t,s)
-  {
-    if(f.fbq)return;
-    n=f.fbq=function(){
-      n.callMethod ?
-        n.callMethod.apply(n,arguments) :
-        n.queue.push(arguments)
+  !function(f,b,e,v,n,t,s) {
+    if (f.fbq) return;
+    n = f.fbq = function() {
+      n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
     };
-    if(!f._fbq)f._fbq=n;
-    n.push=n;
-    n.loaded=!0;
-    n.version='2.0';
-    n.queue=[];
-    t=b.createElement(e);
-    t.async=!0;
-    t.src=v;
-    s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s);
-  }(
-    window,
-    document,
-    'script',
-    'https://connect.facebook.net/en_US/fbevents.js'
-  );
+    if (!f._fbq) f._fbq = n;
+    n.push = n;
+    n.loaded = !0;
+    n.version = "2.0";
+    n.queue = [];
+    t = b.createElement(e);
+    t.async = !0;
+    t.src = v;
+    s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s);
+  }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
 
-  fbq('init', '1572444224102626');
-  fbq('track', 'PageView');
+  fbq("init", "1572444224102626");
+  fbq("track", "PageView");
+
+  var path = window.location.pathname;
+  var storyMatch = path.match(/\/histoires\/([^/]+)\.html$/);
+
+  if (storyMatch) {
+    fbq("track", "ViewContent", {
+      content_ids: [storyMatch[1]],
+      content_type: "product",
+      content_category: "Livre personnalisé"
+    });
+  }
+
+  if (/\/commander\.html$/.test(path) && new URLSearchParams(window.location.search).get("h")) {
+    fbq("track", "InitiateCheckout", {
+      content_category: "Livre personnalisé"
+    });
+  }
 })();
-ViewContent
-InitiateCheckout
-Purchase
+
 /* Qissa · scripts du site (pages publiques + tunnel de commande) */
 (function () {
   "use strict";
@@ -46,7 +49,7 @@ Purchase
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
-  var money = function (n) { return n + " " + (CFG.devise || "DH"); };
+  var money = function (n) { return n + " " + (CFG.devise || "DH"); };
   var waNum = function () { return String(CFG.whatsapp || "").replace(/\D/g, ""); };
   var waUrl = function (msg) { return "https://wa.me/" + waNum() + (msg ? "?text=" + encodeURIComponent(msg) : ""); };
   var prettyWa = function () { var n = waNum(); return n.length === 12 && n.indexOf("212") === 0 ? "+212 " + n[3] + " " + n.slice(4).replace(/(\d\d)(?=\d)/g, "$1 ").trim() : "+" + n; };
@@ -211,7 +214,7 @@ Purchase
 
   function step1() {
     var h = progress(1, "Votre enfant");
-    h += "<h1>" + (isParc ? "Qui entre dans le Parc Enchanté ?" : isBebe ? "Son année, en photos" : "Pour qui est ce livre ?") + '</h1><form novalidate data-form="1">';
+    h += "<h1>" + (isParc ? "Qui entre dans le Parc Enchanté ?" : isBebe ? "Son année, en photos" : "Pour qui est ce livre ?") + '</h1><form novalidate data-form="1">';
     h += '<div class="row2"><div class="field"><label for="f-nom">' + (isBebe ? "Son nom" : "Son nom") + '</label><input id="f-nom" data-k="nom" type="text" maxlength="' + (CFG.nomMax || 16) + '" value="' + esc(S.nom) + '" autocomplete="off"></div>';
     if (isBebe) h += '<div class="field"><label for="f-nais">Sa date de naissance</label><input id="f-nais" data-k="naissance" type="date" value="' + esc(S.naissance) + '" max="' + new Date().toISOString().slice(0, 10) + '"></div></div>';
     else {
@@ -219,9 +222,9 @@ Purchase
       h += '<div class="field"><label for="f-age">Son âge</label><select id="f-age" data-k="age">' + opts + "</select></div></div>";
     }
     if (hasGender) {
-      h += '<fieldset class="box"><legend class="l">' + (isParc ? "Pour qui, avec qui ?" : "C’est…") + '</legend><span class="own">Propre à cette histoire</span>';
+      h += '<fieldset class="box"><legend class="l">' + (isParc ? "Pour qui, avec qui ?" : "C’est…") + '</legend><span class="own">Propre à cette histoire</span>';
       h += '<p style="font-weight:800;font-size:14px">C’est…</p>' + seg("genre", [["garcon", "Un petit garçon"], ["fille", "Une petite fille"]], S.genre, true);
-      if (isParc) h += '<p style="font-weight:800;font-size:14px;margin-top:6px">Qui l’accompagne dans le parc ?</p>' + seg("avec", [["Maman", "Maman"], ["Papa", "Papa"]], S.avec, true);
+      if (isParc) h += '<p style="font-weight:800;font-size:14px;margin-top:6px">Qui l’accompagne dans le parc ?</p>' + seg("avec", [["Maman", "Maman"], ["Papa", "Papa"]], S.avec, true);
       h += "</fieldset>";
     }
     if (isBebe) {
@@ -242,7 +245,7 @@ Purchase
 
   function step2() {
     var h = progress(2, "Dédicace et offre") + '<form novalidate data-form="2" style="margin-top:18px">' + summary(true);
-    h += '<fieldset class="field" style="border:0;padding:0;margin:0;gap:12px"><legend style="font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;margin-bottom:10px">Votre dédicace</legend><p style="font-weight:800">Qui offre le livre ?</p>';
+    h += '<fieldset class="field" style="border:0;padding:0;margin:0;gap:12px"><legend style="font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;margin-bottom:10px">Votre dédicace</legend><p style="font-weight:800">Qui offre le livre ?</p>';
     h += '<div class="seg" role="group" aria-label="Qui offre le livre">' + (CFG.relations || []).map(function (r) { return '<button type="button" data-seg="giver" data-val="' + esc(r) + '" aria-pressed="' + (r === S.giver ? "true" : "false") + '">' + esc(r === "Autre" ? "Autre…" : r) + "</button>"; }).join("") + "</div>";
     if (S.giver === "Autre") h += '<div class="field"><label for="f-autre">De la part de</label><input id="f-autre" data-k="autre" type="text" maxlength="30" value="' + esc(S.autre) + '" placeholder="Mamie, Tonton…"></div>';
     h += '<div class="field"><label for="f-msg">Votre message <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><textarea id="f-msg" data-k="msg" rows="3" maxlength="' + (CFG.dedicaceMax || 180) + '">' + esc(S.msg) + '</textarea><span id="cnt" style="align-self:flex-end;font-size:13px;font-weight:700;color:var(--muted)">' + S.msg.length + " / " + (CFG.dedicaceMax || 180) + "</span></div></fieldset>";
@@ -275,7 +278,7 @@ Purchase
     h += '<p id="upl" style="font-size:14px;font-weight:700;color:var(--muted)">' + (S.uploaded === true ? "Vos photos sont bien arrivées." : S.uploaded === false ? "Vos photos n’ont pas pu être envoyées : envoyez-les nous sur WhatsApp avec votre commande." : nbPhotos() && S.serveur ? "Envoi de vos photos…" : "") + "</p>";
     h += '<ol><li>Vous nous envoyez la commande sur WhatsApp.</li><li>Le jour même, vous recevez l’aperçu de son livre sur votre numéro.</li><li>Après votre accord, le livre est imprimé, puis livré chez vous.</li><li>Vous payez ' + money(total()) + " à la livraison.</li></ol>";
     if (!S.serveur && nbPhotos()) h += '<p class="info" style="text-align:left">' + ICON_WA + "N’oubliez pas de joindre vos photos dans la conversation WhatsApp, avec la référence " + esc(S.ref) + ".</p>";
-    h += '<details style="width:100%;text-align:left"><summary style="cursor:pointer;font-weight:800">Le message n’a pas pu s’ouvrir ?</summary><div class="msg" id="msgtxt">' + esc(msg) + '</div><button class="btn ghost" type="button" data-copy style="margin-top:10px;height:44px">Copier le message</button></details>';
+    h += '<details style="width:100%;text-align:left"><summary style="cursor:pointer;font-weight:800">Le message n’a pas pu s’ouvrir ?</summary><div class="msg" id="msgtxt">' + esc(msg) + '</div><button class="btn ghost" type="button" data-copy style="margin-top:10px;height:44px">Copier le message</button></details>';
     h += '<a href="index.html" style="font-weight:800">Retour aux histoires</a></div>';
     return h;
   }
@@ -403,8 +406,26 @@ Purchase
         var submitBtn = e.target.querySelector('button[type="submit"]');
         if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Envoi de la commande…"; }
         upload().then(function (res) {
-          if (res && res.ref) { S.ref = res.ref; finish(true); }
-          else { S.ref = newRef(); finish(false); }
+          if (res && res.ref) {
+            S.ref = res.ref;
+
+            // Meta : compter un achat uniquement après confirmation du serveur.
+            // Aucune donnée personnelle (nom, téléphone, photos, dédicace) n’est transmise.
+            if (typeof window.fbq === "function") {
+              window.fbq("track", "Purchase", {
+                value: total(),
+                currency: "MAD",
+                content_ids: [story.slug],
+                content_type: "product",
+                content_category: "Livre personnalisé"
+              });
+            }
+
+            finish(true);
+          } else {
+            S.ref = newRef();
+            finish(false);
+          }
         });
       } else {
         S.ref = newRef(); finish(false);
