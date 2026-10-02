@@ -1,54 +1,44 @@
 // Meta Pixel — Qissa Magic
 (function initQissaMetaPixel() {
-  // Ne jamais suivre l'Atelier privé
-  if (window.location.pathname.includes("qissa-admin-")) {
+  if (window.location.pathname.includes('qissa-admin-')) {
     return;
   }
 
-  // Évite une double installation du Pixel
   if (window.fbq) {
     return;
   }
 
-  !function(f,b,e,v,n,t,s) {
-    if (f.fbq) return;
-    n = f.fbq = function() {
-      n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+  !function(f,b,e,v,n,t,s)
+  {
+    if(f.fbq)return;
+    n=f.fbq=function(){
+      n.callMethod ?
+        n.callMethod.apply(n,arguments) :
+        n.queue.push(arguments)
     };
-    if (!f._fbq) f._fbq = n;
-    n.push = n;
-    n.loaded = !0;
-    n.version = "2.0";
-    n.queue = [];
-    t = b.createElement(e);
-    t.async = !0;
-    t.src = v;
-    s = b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t, s);
-  }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+    if(!f._fbq)f._fbq=n;
+    n.push=n;
+    n.loaded=!0;
+    n.version='2.0';
+    n.queue=[];
+    t=b.createElement(e);
+    t.async=!0;
+    t.src=v;
+    s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s);
+  }(
+    window,
+    document,
+    'script',
+    'https://connect.facebook.net/en_US/fbevents.js'
+  );
 
-  fbq("init", "1572444224102626");
-  fbq("track", "PageView");
-
-  var path = window.location.pathname;
-
-  // Consultation d'une fiche histoire
-  if (/\/histoires\/[^/]+\.html$/.test(path)) {
-    fbq("track", "ViewContent", {
-      content_name: document.title,
-      content_category: "Livre personnalisé",
-      content_type: "product"
-    });
-  }
-
-  // Entrée dans le tunnel de personnalisation / commande
-  if (/\/commander\.html$/.test(path)) {
-    fbq("track", "InitiateCheckout", {
-      content_category: "Livre personnalisé"
-    });
-  }
+  fbq('init', '1572444224102626');
+  fbq('track', 'PageView');
 })();
-
+ViewContent
+InitiateCheckout
+Purchase
 /* Qissa · scripts du site (pages publiques + tunnel de commande) */
 (function () {
   "use strict";
@@ -413,28 +403,8 @@
         var submitBtn = e.target.querySelector('button[type="submit"]');
         if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Envoi de la commande…"; }
         upload().then(function (res) {
-          if (res && res.ref) {
-            S.ref = res.ref;
-
-            // Meta — commande réellement enregistrée par le serveur
-            // Aucune donnée personnelle de l'enfant ou du client n'est envoyée.
-            if (typeof window.fbq === "function") {
-              window.fbq("track", "Purchase", {
-                value: total(),
-                currency: "MAD",
-                content_name: story.nom,
-                content_category: "Livre personnalisé",
-                content_type: "product",
-                content_ids: [story.slug]
-              });
-            }
-
-            finish(true);
-          } else {
-            // Pas de Purchase Meta si l'enregistrement serveur a échoué.
-            S.ref = newRef();
-            finish(false);
-          }
+          if (res && res.ref) { S.ref = res.ref; finish(true); }
+          else { S.ref = newRef(); finish(false); }
         });
       } else {
         S.ref = newRef(); finish(false);
