@@ -36,7 +36,9 @@
   fbq('init', '1572444224102626');
   fbq('track', 'PageView');
 })();
-
+ViewContent
+InitiateCheckout
+Purchase
 /* Qissa · scripts du site (pages publiques + tunnel de commande) */
 (function () {
   "use strict";
