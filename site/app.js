@@ -110,6 +110,74 @@
   }(window, document, "ttq");
 })();
 
+
+// Google Analytics 4 — Qissa Magic
+(function initQissaGA4() {
+  // Ne jamais suivre l’Atelier privé.
+  if (window.location.pathname.indexOf("qissa-admin-") !== -1) return;
+  if (window.__QISSA_GA4__) return;
+  window.__QISSA_GA4__ = true;
+
+  var GA_ID = "G-PMNMZMHL5B";
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function() {
+    window.dataLayer.push(arguments);
+  };
+
+  var s = document.createElement("script");
+  s.async = true;
+  s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(GA_ID);
+  document.head.appendChild(s);
+
+  window.gtag("js", new Date());
+
+  // Envoie automatiquement page_view et permet à GA4 d’attribuer les sources/UTM.
+  window.gtag("config", GA_ID);
+
+  var path = window.location.pathname;
+  var storyMatch = path.match(/\/histoires\/([^/]+)\.html$/);
+  var stories = window.QISSA_STORIES || [];
+
+  function findStory(slug) {
+    for (var i = 0; i < stories.length; i++) {
+      if (stories[i].slug === slug) return stories[i];
+    }
+    return null;
+  }
+
+  // Consultation d’une histoire = événement e-commerce GA4 view_item.
+  if (storyMatch) {
+    var viewedStory = findStory(storyMatch[1]);
+    window.gtag("event", "view_item", {
+      currency: "MAD",
+      items: [{
+        item_id: storyMatch[1],
+        item_name: viewedStory && viewedStory.nom ? viewedStory.nom : document.title,
+        item_category: "Livre personnalisé",
+        quantity: 1
+      }]
+    });
+  }
+
+  // Entrée dans le tunnel de commande = begin_checkout.
+  if (/\/commander\.html$/.test(path)) {
+    var checkoutSlug = new URLSearchParams(window.location.search).get("h");
+    if (checkoutSlug) {
+      var checkoutStory = findStory(checkoutSlug);
+      window.gtag("event", "begin_checkout", {
+        currency: "MAD",
+        items: [{
+          item_id: checkoutSlug,
+          item_name: checkoutStory && checkoutStory.nom ? checkoutStory.nom : checkoutSlug,
+          item_category: "Livre personnalisé",
+          quantity: 1
+        }]
+      });
+    }
+  }
+})();
+
 /* Qissa · scripts du site (pages publiques + tunnel de commande) */
 (function () {
   "use strict";
@@ -505,6 +573,24 @@
                 content_type: "product",
                 quantity: 1,
                 description: story.nom
+              });
+            }
+
+            // Google Analytics 4 : achat compté uniquement après confirmation du backend.
+            // Aucune donnée personnelle (nom, téléphone, photos, dédicace) n’est envoyée.
+            if (typeof window.gtag === "function") {
+              window.gtag("event", "purchase", {
+                transaction_id: S.ref,
+                value: total(),
+                currency: "MAD",
+                shipping: Number(CFG.livraison || 0),
+                items: [{
+                  item_id: story.slug,
+                  item_name: story.nom,
+                  item_category: "Livre personnalisé",
+                  price: Number(offer().prix || 0),
+                  quantity: 1
+                }]
               });
             }
 
