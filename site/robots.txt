@@ -1,9 +1,4 @@
 User-agent: *
 Allow: /
 
-# Pages privées / transactionnelles à ne pas indexer
-Disallow: /commander.html
-Disallow: /atelier.html
-Disallow: /qissa-admin-
-
 Sitemap: https://www.qissamagic.com/sitemap.xml
