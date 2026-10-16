@@ -271,7 +271,7 @@
     avec: q.get("avec") === "Papa" ? "Papa" : "Maman",
     child: [], parent: [], miles: {}, consent: false,
     giver: "Maman et Papa", autre: "", msg: "", offre: CFG.offreParDefaut || "coffret",
-    cli: { nom: "", tel: "", ville: "Casablanca", adr: "" },
+    cli: { nom: "", tel: "", ville: "", adr: "" },
     err: "", sending: false, serveur: false
   };
   if (story.slug === "capitaine") S.genre = "garcon";
@@ -364,17 +364,18 @@
       h += "</fieldset>";
     }
     if (isBebe) {
-      h += '<fieldset class="field"><legend class="l">Une photo pour chaque étape</legend><small>Au moins une photo. Vous pouvez envoyer les autres sur WhatsApp après la commande.</small><div class="thumbs" style="grid-template-columns:repeat(2,minmax(0,1fr))">';
+      h += '<fieldset class="field"><legend class="l">Une photo pour chaque étape <span style="font-weight:600;color:var(--muted)">(facultatif)</span></legend><small>Vous pouvez continuer sans photo et nous les envoyer plus tard sur WhatsApp.</small><div class="thumbs" style="grid-template-columns:repeat(2,minmax(0,1fr))">';
       MILES.forEach(function (m) {
         var p = S.miles[m[0]];
         h += p ? '<div class="t"><img src="' + p.url + '" alt="Photo ' + m[1] + ' pour le livre personnalisé Qissa"><em>' + m[1] + '</em><button type="button" data-rm="m:' + m[0] + '" aria-label="Retirer cette photo">×</button></div>' : '<button type="button" class="add" data-add="m:' + m[0] + '">' + ICON_CAM + m[1] + "</button>";
       });
       h += "</div></fieldset>";
     } else {
-      h += '<fieldset class="field"><legend class="l">' + (isParc ? "Ses photos" : "Ses photos (1 à " + (CFG.maxPhotos || 3) + ")") + "</legend><small>Des photos de face, bien éclairées.</small>" + thumbs(S.child, CFG.maxPhotos || 3, "child") + "</fieldset>";
+      h += '<fieldset class="field"><legend class="l">' + (isParc ? "Ses photos" : "Ses photos (jusqu’à " + (CFG.maxPhotos || 3) + ")") + ' <span style="font-weight:600;color:var(--muted)">(facultatif)</span></legend><small>Vous pouvez continuer sans photo et nous les envoyer plus tard sur WhatsApp. Si vous en ajoutez maintenant, choisissez des photos de face, bien éclairées.</small>' + thumbs(S.child, CFG.maxPhotos || 3, "child") + "</fieldset>";
     }
-    if (isParc) h += '<fieldset class="box"><legend class="l">Les photos de ' + esc(S.avec) + '</legend><span class="own">Propre à cette histoire</span><p style="font-size:14px;color:var(--muted)">1 ou 2 photos de face, pour ' + (S.avec === "Maman" ? "qu’elle" : "qu’il") + ' se reconnaisse aussi.</p>' + thumbs(S.parent, 2, "parent") + "</fieldset>";
-    h += '<label class="consent"><input type="checkbox" data-k="consent"' + (S.consent ? " checked" : "") + "><span>Je suis son parent ou son tuteur légal et j’accepte que ces photos servent à illustrer ce livre.</span></label>";
+    if (isParc) h += '<fieldset class="box"><legend class="l">Les photos de ' + esc(S.avec) + ' <span style="font-weight:600;color:var(--muted)">(facultatif)</span></legend><span class="own">Propre à cette histoire</span><p style="font-size:14px;color:var(--muted)">Vous pouvez continuer sans photo et nous les envoyer plus tard sur WhatsApp. Si vous en ajoutez maintenant, 1 ou 2 photos de face suffisent.</p>' + thumbs(S.parent, 2, "parent") + "</fieldset>";
+    if (nbPhotos()) h += '<label class="consent"><input type="checkbox" data-k="consent"' + (S.consent ? " checked" : "") + '><span>Je suis son parent ou son tuteur légal et j’accepte que ces photos servent à illustrer ce livre.</span></label>';
+    else h += '<p style="font-size:13px;font-weight:700;color:var(--muted);margin-top:2px">Aucune photo maintenant ? Vous pouvez continuer et nous les envoyer plus tard sur WhatsApp.</p>';
     h += '<p class="err" role="alert">' + esc(S.err) + '</p><button class="btn big" type="submit">Continuer ' + ICON_ARROW + "</button></form>";
     return h;
   }
@@ -397,11 +398,11 @@
     var h = progress(3, "Commande") + "<h1>Votre commande</h1>" + '<form novalidate data-form="3">' + summary(true);
     h += '<fieldset class="field" style="border:0;padding:0;margin:0;gap:14px"><legend style="font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;margin-bottom:10px">Livraison</legend>';
     h += '<div class="field"><label for="c-nom">Votre nom</label><input id="c-nom" data-c="nom" type="text" placeholder="Nom et prénom" value="' + esc(c.nom) + '" autocomplete="name"></div>';
-    h += '<div class="field"><label for="c-tel">Téléphone (WhatsApp)</label><div style="display:flex;height:52px;border-radius:14px;border:1.5px solid var(--field);background:#fff;overflow:hidden"><span style="display:flex;align-items:center;padding:0 12px;background:#F1E9D6;font-weight:800">+212</span><input id="c-tel" data-c="tel" type="tel" inputmode="tel" placeholder="6 12 34 56 78" value="' + esc(c.tel) + '" autocomplete="tel-national" style="border:0;border-radius:0;height:auto;flex-grow:1;min-width:0"></div></div>';
-    h += '<div class="field"><label for="c-ville">Ville</label><select id="c-ville" data-c="ville">' + VILLES.map(function (v) { return "<option" + (v === c.ville ? " selected" : "") + ">" + v + "</option>"; }).join("") + "</select></div>";
-    h += '<div class="field"><label for="c-adr">Adresse de livraison</label><textarea id="c-adr" data-c="adr" rows="2" placeholder="Rue, numéro, quartier, un repère">' + esc(c.adr) + "</textarea></div></fieldset>";
+    h += '<div class="field"><label for="c-tel">Téléphone (WhatsApp) <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><div style="display:flex;height:52px;border-radius:14px;border:1.5px solid var(--field);background:#fff;overflow:hidden"><span style="display:flex;align-items:center;padding:0 12px;background:#F1E9D6;font-weight:800">+212</span><input id="c-tel" data-c="tel" type="tel" inputmode="tel" placeholder="6 12 34 56 78" value="' + esc(c.tel) + '" autocomplete="tel-national" style="border:0;border-radius:0;height:auto;flex-grow:1;min-width:0"></div></div>';
+    h += '<div class="field"><label for="c-ville">Ville <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><select id="c-ville" data-c="ville"><option value=""' + (!c.ville ? " selected" : "") + '>À renseigner plus tard</option>' + VILLES.map(function (v) { return '<option value="' + esc(v) + '"' + (v === c.ville ? " selected" : "") + ">" + esc(v) + "</option>"; }).join("") + "</select></div>";
+    h += '<div class="field"><label for="c-adr">Adresse de livraison <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><textarea id="c-adr" data-c="adr" rows="2" placeholder="Vous pourrez la communiquer plus tard sur WhatsApp">' + esc(c.adr) + "</textarea></div></fieldset>";
     h += '<div class="total"><p><span>' + esc(o.nom) + "</span><span>" + money(o.prix) + "</span></p><p><span>Livraison</span><span>" + money(CFG.livraison) + '</span></p><p class="t"><span>À payer à la livraison</span><b>' + money(total()) + "</b></p></div>";
-    h += '<p class="notice">' + ICON_WA + "Le jour même, vous recevez l’aperçu de son livre sur ce numéro WhatsApp.</p>";
+    h += '<p class="notice">' + ICON_WA + "Vous pouvez commander sans téléphone ni adresse et compléter ces informations ensuite sur WhatsApp.</p>";
     h += '<p class="err" role="alert">' + esc(S.err) + '</p><div style="display:flex;flex-direction:column;gap:10px"><button class="btn wa big" type="submit">' + ICON_WA + 'Confirmer ma commande et ouvrir WhatsApp</button><p style="text-align:center;font-size:13px;font-weight:600;color:var(--muted)">Votre commande est d’abord enregistrée chez Qissa. WhatsApp s’ouvre ensuite avec le message déjà préparé.</p></div></form>';
     return h;
   }
@@ -411,9 +412,9 @@
     var h = '<div class="done"><span class="hand" style="font-size:26px">Merci !</span><h1 style="margin:0">Votre commande est bien enregistrée</h1>';
     h += '<p style="color:var(--muted)">Qissa a déjà reçu votre commande. Votre référence :</p><p class="ref">' + esc(S.ref) + "</p>";
     h += '<a class="btn wa big" id="wa" href="' + url + '" target="_blank" rel="noopener">' + ICON_WA + "Ouvrir WhatsApp</a>";
-    h += '<p style="font-size:13px;font-weight:600;color:var(--muted);text-align:center">WhatsApp est facultatif pour l’enregistrement : il permet simplement de poursuivre la conversation avec Qissa.</p>';
-    h += '<p id="upl" style="font-size:14px;font-weight:700;color:var(--muted)">' + (S.uploaded === true ? "Votre commande et vos photos sont bien arrivées." : S.uploaded === false ? "La commande n’a pas pu être enregistrée correctement." : nbPhotos() && S.serveur ? "Envoi de vos photos…" : "") + "</p>";
-    h += '<ol><li>Votre commande est déjà enregistrée chez Qissa.</li><li>Le jour même, vous recevez l’aperçu de son livre sur votre numéro WhatsApp.</li><li>Après votre accord, le livre est imprimé, puis livré chez vous.</li><li>Vous payez ' + money(total()) + " à la livraison.</li></ol>";
+    h += '<p style="font-size:13px;font-weight:600;color:var(--muted);text-align:center">WhatsApp est facultatif pour l’enregistrement. Utilisez-le pour compléter les photos ou coordonnées manquantes.</p>';
+    h += '<p id="upl" style="font-size:14px;font-weight:700;color:var(--muted)">' + (S.uploaded === true ? (nbPhotos() ? "Votre commande et vos photos sont bien arrivées." : "Votre commande est bien arrivée. Vous pourrez envoyer les photos plus tard sur WhatsApp.") : S.uploaded === false ? "La commande n’a pas pu être enregistrée correctement." : nbPhotos() && S.serveur ? "Envoi de vos photos…" : "") + "</p>";
+    h += '<ol><li>Votre commande est déjà enregistrée chez Qissa.</li><li>Le jour même, vous recevez l’aperçu de son livre dans votre conversation WhatsApp.</li><li>Après votre accord, le livre est imprimé, puis livré chez vous.</li><li>Vous payez ' + money(total()) + " à la livraison.</li></ol>";
     if (!S.serveur && nbPhotos()) h += '<p class="info" style="text-align:left">' + ICON_WA + "N’oubliez pas de joindre vos photos dans la conversation WhatsApp, avec la référence " + esc(S.ref) + ".</p>";
     h += '<details style="width:100%;text-align:left"><summary style="cursor:pointer;font-weight:800">Le message n’a pas pu s’ouvrir ?</summary><div class="msg" id="msgtxt">' + esc(msg) + '</div><button class="btn ghost" type="button" data-copy style="margin-top:10px;height:44px">Copier le message</button></details>';
     h += '<a href="index.html" style="font-weight:800">Retour aux histoires</a></div>';
@@ -434,14 +435,14 @@
     L.push("Offre : " + o.nom + " (" + o.prix + " DH)");
     L.push("Livraison : " + CFG.livraison + " DH");
     L.push("Total à payer à la livraison : " + total() + " DH");
-    L.push("Photos : " + (nbPhotos() ? nbPhotos() + (S.serveur ? " (envoyées avec la commande)" : " (je les envoie ici)") : "je les envoie ici"));
+    L.push("Photos : " + (nbPhotos() ? nbPhotos() + (S.serveur ? " (envoyées avec la commande)" : " (je les envoie ici)") : "à envoyer plus tard"));
     L.push("Nom : " + c.nom);
-    L.push("Téléphone : +212 " + phoneDigits(c.tel).slice(1));
-    L.push("Ville : " + c.ville);
-    L.push("Adresse : " + c.adr.replace(/\s*\n\s*/g, ", "));
+    L.push("Téléphone : " + (phoneDigits(c.tel) ? "+212 " + phoneDigits(c.tel).slice(1) : "à compléter"));
+    L.push("Ville : " + (c.ville || "à compléter"));
+    L.push("Adresse : " + (c.adr.trim() ? c.adr.replace(/\s*\n\s*/g, ", ") : "à compléter"));
     return L.join("\n");
   }
-  var phoneDigits = function (v) { var d = String(v || "").replace(/\D/g, ""); if (d.indexOf("00212") === 0) d = d.slice(5); else if (d.indexOf("212") === 0) d = d.slice(3); return d.charAt(0) === "0" ? d : "0" + d; };
+  var phoneDigits = function (v) { var d = String(v || "").replace(/\D/g, ""); if (!d) return ""; if (d.indexOf("00212") === 0) d = d.slice(5); else if (d.indexOf("212") === 0) d = d.slice(3); return d.charAt(0) === "0" ? d : "0" + d; };
   var phoneValid = function (v) { return /^0[5-7]\d{8}$/.test(phoneDigits(v)); };
   var newRef = function () {
     var a = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", s = "", r = new Uint8Array(4);
@@ -453,18 +454,14 @@
   /* ---------- validation ---------- */
   function check1() {
     if (S.nom.length < 2) return "Indiquez son nom.";
-    if (isBebe) { if (!S.naissance) return "Indiquez sa date de naissance."; if (Object.keys(S.miles).length < 1) return "Ajoutez au moins une photo."; }
-    else if (!S.child.length) return "Ajoutez au moins une photo.";
-    if (isParc && !S.parent.length) return "Ajoutez au moins une photo de " + S.avec + ".";
-    if (!S.consent) return "Merci de cocher l’autorisation parentale.";
+    if (isBebe && !S.naissance) return "Indiquez sa date de naissance.";
+    if (nbPhotos() && !S.consent) return "Merci de cocher l’autorisation parentale pour les photos ajoutées.";
     return "";
   }
   function check3() {
     var c = S.cli;
     if (c.nom.trim().length < 3) return "Indiquez votre nom.";
-    if (!phoneValid(c.tel)) return "Vérifiez votre numéro WhatsApp (exemple : 6 12 34 56 78).";
-    if (!c.ville) return "Choisissez votre ville.";
-    if (c.adr.trim().length < 6) return "Indiquez votre adresse de livraison.";
+    if (String(c.tel || "").trim() && !phoneValid(c.tel)) return "Vérifiez votre numéro WhatsApp ou laissez ce champ vide pour le compléter plus tard.";
     return "";
   }
 
@@ -474,7 +471,7 @@
     // Les prix et la référence sont recalculés/créés côté serveur.
     var order = { histoire: story.slug, histoire_nom: story.nom, version: "", enfant: S.nom, age: isBebe ? null : S.age, naissance: isBebe ? S.naissance : "", genre: S.genre, avec: isParc ? S.avec : "",
       de_la_part_de: giver(), message: S.msg, offre: S.offre,
-      client: { nom: S.cli.nom.trim(), telephone: "+212" + phoneDigits(S.cli.tel).slice(1), ville: S.cli.ville, adresse: S.cli.adr.trim() }, consentement_parent: true };
+      client: { nom: S.cli.nom.trim(), telephone: phoneDigits(S.cli.tel) ? "+212" + phoneDigits(S.cli.tel).slice(1) : "", ville: S.cli.ville, adresse: S.cli.adr.trim() }, consentement_parent: nbPhotos() ? !!S.consent : false };
     fd.append("order", JSON.stringify(order));
     S.child.forEach(function (p, i) { fd.append("photos", p.blob, "enfant-" + (i + 1) + ".jpg"); n++; });
     S.parent.forEach(function (p, i) { fd.append("photos", p.blob, "parent-" + (i + 1) + ".jpg"); n++; });
