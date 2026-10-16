@@ -175,11 +175,14 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
         raise HTTPException(400, "Commande illisible.")
     if o.get("histoire") not in STORIES or o.get("offre") not in OFFERS:
         raise HTTPException(400, "Histoire ou offre inconnue.")
-    if o.get("consentement_parent") is not True:
-        raise HTTPException(400, "L'autorisation parentale est nécessaire.")
     cli = o.get("client") or {}
-    if len(clean(cli.get("nom"))) < 3 or len(clean(cli.get("adresse"))) < 6 or not re.match(r"^\+2120?[5-7]\d{8}$", clean(cli.get("telephone"), 20)):
-        raise HTTPException(400, "Coordonnées de livraison incomplètes.")
+    if len(clean(cli.get("nom"))) < 3:
+        raise HTTPException(400, "Le nom du client est nécessaire.")
+    telephone = clean(cli.get("telephone"), 20)
+    if telephone and not re.match(r"^\+2120?[5-7]\d{8}$", telephone):
+        raise HTTPException(400, "Numéro de téléphone invalide.")
+    if photos and o.get("consentement_parent") is not True:
+        raise HTTPException(400, "L'autorisation parentale est nécessaire lorsque des photos sont envoyées.")
     if len(photos) > MAX_FILES:
         raise HTTPException(400, "Trop de photos.")
 
@@ -214,7 +217,7 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
         "total": grand_total,
         "client": {"nom": clean(cli.get("nom"), 60), "telephone": clean(cli.get("telephone"), 20),
                    "ville": clean(cli.get("ville"), 40), "adresse": clean(cli.get("adresse"), 200)},
-        "consentement_parent": True,
+        "consentement_parent": bool(o.get("consentement_parent")) if photos else False,
         "photos": sorted(saved),
     }
     (odir / "order.json").write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
