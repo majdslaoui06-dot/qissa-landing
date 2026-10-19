@@ -4,7 +4,7 @@ Version finale de travail du site Qissa avec 7 histoires, pages produit complèt
 
 ## Offre
 - Livre personnalisé : **199 DH**
-- Livre dans son coffret : **249 DH**
+- Livre dans son coffret : **289 DH**
 - Livraison : **35 DH** en supplément
 - Livre : **21 × 21 cm · 24 pages**
 - Coffret : **25 × 25 × 3 cm**
