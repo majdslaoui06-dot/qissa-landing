@@ -181,8 +181,7 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
     telephone = clean(cli.get("telephone"), 20)
     if telephone and not re.match(r"^\+2120?[5-7]\d{8}$", telephone):
         raise HTTPException(400, "Numéro de téléphone invalide.")
-    if photos and o.get("consentement_parent") is not True:
-        raise HTTPException(400, "L'autorisation parentale est nécessaire lorsque des photos sont envoyées.")
+    # La case est facultative ; sa valeur est conservée dans la commande.
     if len(photos) > MAX_FILES:
         raise HTTPException(400, "Trop de photos.")
 
