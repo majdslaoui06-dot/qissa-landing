@@ -455,7 +455,6 @@
   function check1() {
     if (S.nom.length < 2) return "Indiquez son nom.";
     if (isBebe && !S.naissance) return "Indiquez sa date de naissance.";
-    if (nbPhotos() && !S.consent) return "Merci de cocher l’autorisation parentale pour les photos ajoutées.";
     return "";
   }
   function check3() {
