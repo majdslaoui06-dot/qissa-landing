@@ -3,7 +3,6 @@
 const gallery=document.querySelector('.extract .spread-gallery');if(!gallery)return;
 const spreads=[...gallery.querySelectorAll('figure')].map(figure=>({src:figure.querySelector('img').src,title:figure.querySelector('b')?.textContent||figure.querySelector('img').alt,caption:figure.querySelector('figcaption span')?.textContent||''}));
 if(!spreads.length)return;
-spreads.forEach(s=>{const img=new Image();img.src=s.src;});
 const reader=document.createElement('div');reader.className='q-reader';
 reader.innerHTML=`<div class="q-book-stage"><div class="q-book" tabindex="0" role="group" aria-label="Extrait du livre à feuilleter avec les flèches du clavier"><div class="q-book-cover"></div><div class="q-paper-stack"></div><div class="q-page q-page-left"></div><div class="q-page q-page-right"></div><div class="q-spine"></div><div class="q-sheet" hidden><div class="q-sheet-face q-sheet-front"></div><div class="q-sheet-face q-sheet-back"></div></div><button type="button" class="q-page-hit q-hit-left" aria-label="Double page précédente"></button><button type="button" class="q-page-hit q-hit-right" aria-label="Double page suivante"></button></div></div><div class="q-book-nav"><button type="button" class="q-book-prev" aria-label="Feuilleter vers la gauche">‹</button><span class="q-book-status" aria-live="polite"></span><button type="button" class="q-book-next" aria-label="Feuilleter vers la droite">›</button></div><div class="q-book-caption"><h3></h3><p></p></div>`;
 gallery.replaceWith(reader);
