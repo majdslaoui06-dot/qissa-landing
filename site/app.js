@@ -1,3 +1,10 @@
+// Logo Qissa animé, partagé par les pages publiques.
+(function () {
+  const script = document.createElement('script');
+  script.src = new URL('assets/qissa-logo/qissa-logo.js', document.currentScript.src).href;
+  document.head.append(script);
+})();
+
 // Meta Pixel — Qissa Magic
 (function initQissaMetaPixel() {
   // Ne jamais suivre l’Atelier privé.
