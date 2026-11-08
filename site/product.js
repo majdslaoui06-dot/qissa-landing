@@ -21,11 +21,18 @@ const slug=location.pathname.split('/').pop().replace(/\.html$/,'');
 const names={capitaine:'Capitaine',super:'Super Omar',supersara:'Super Sara',ballet:'Ania et le ballet des étoiles',iletaitunefois:'Il était une fois…',parc:'Samy et le Parc Enchanté',premiereannee:'La première année'};
 function phone(v){let d=v.replace(/\D/g,'');if(d.startsWith('00212'))d=d.slice(5);else if(d.startsWith('212'))d=d.slice(3);if(!d)return '';return '+212'+(d.startsWith('0')?d.slice(1):d);}
 function jpeg(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{const ratio=Math.min(1,1536/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*ratio);canvas.height=Math.round(img.height*ratio);canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('Photo illisible')),'image/jpeg',.9);};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Photo illisible'));};img.src=url;});}
+const alertBox=document.createElement('div');alertBox.className='q-form-alert';alertBox.setAttribute('role','alert');alertBox.hidden=true;form.querySelector('.q-form-heading').after(alertBox);
+function clearValidation(field){field.removeAttribute('aria-invalid');field.closest('.q-field')?.querySelector('.q-inline-error')?.remove();if(!form.querySelector('[aria-invalid=true]'))alertBox.hidden=true;}
+function showValidation(field,message){form.querySelectorAll('[aria-invalid=true]').forEach(clearValidation);alertBox.textContent='Votre commande n’est pas encore envoyée. '+message;alertBox.hidden=false;error.textContent=message;field.setAttribute('aria-invalid','true');const label=field.closest('.q-field');if(label){const inline=document.createElement('span');inline.className='q-inline-error';inline.textContent=message;label.append(inline);}field.focus({preventScroll:true});field.scrollIntoView({behavior:'smooth',block:'center'});}
+form.addEventListener('input',e=>{const field=e.target;if(field.matches?.('[aria-invalid=true]')){const min=field.name==='nom'?2:field.name==='client'?3:0;if(field.checkValidity()&&field.value.trim().length>=min)clearValidation(field);}});
 confirm.textContent='Commander ce livre · 234 DH';
-confirm.onclick=async()=>{error.textContent='';result.hidden=true;if(!form.reportValidity())return;
+confirm.onclick=async()=>{error.textContent='';result.hidden=true;
+ const required=[...form.querySelectorAll('input[required],select[required],textarea[required]')].find(field=>!field.checkValidity());
+ if(required){const label=required.closest('.q-field')?.firstChild?.textContent?.trim()||'Ce champ';showValidation(required,'Veuillez renseigner '+label.toLowerCase()+'.');return;}
  const child=form.elements.nom.value.trim(),client=form.elements.client.value.trim(),tel=phone(form.elements.telephone.value);
- if(child.length<2||client.length<3){error.textContent='Indiquez le prénom de l’enfant et votre nom complet.';return;}
- if(tel&&!/^\+212[5-7]\d{8}$/.test(tel)){error.textContent='Vérifiez le numéro WhatsApp, par exemple 0612345678.';form.elements.telephone.focus();return;}
+ if(child.length<2){showValidation(form.elements.nom,'Indiquez le prénom de votre enfant (au moins 2 lettres).');return;}
+ if(client.length<3){showValidation(form.elements.client,'Indiquez votre nom et prénom (au moins 3 lettres).');return;}
+ if(tel&&!/^\+212[5-7]\d{8}$/.test(tel)){showValidation(form.elements.telephone,'Vérifiez le numéro WhatsApp, par exemple 0612345678.');return;}
  if(!names[slug]){error.textContent='Histoire inconnue.';return;}
  confirm.disabled=true;dockButton.disabled=true;confirm.textContent='Enregistrement de la commande…';
  const selected=[...files.entries()].flatMap(([input,items])=>items.map((item,i)=>({file:item.file,name:input.name==='photo-enfant'?'enfant-'+(i+1)+'.jpg':input.name==='photo-parent'?'parent-'+(i+1)+'.jpg':'etape-'+input.name.slice(6)+'.jpg'})));
