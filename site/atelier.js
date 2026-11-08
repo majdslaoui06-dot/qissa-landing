@@ -63,7 +63,7 @@
         var list = j.orders || j;
         if (!list.length) { $("#list").innerHTML = "<p>Aucune commande pour le moment.</p>"; return; }
         $("#list").innerHTML = "<table><tr><th>Réf</th><th>Histoire</th><th>Enfant</th><th>Client</th><th>Total</th><th>Photos</th><th></th></tr>" + list.map(function (o) {
-          return "<tr><td>" + esc(o.ref) + "</td><td>" + esc(o.histoire_nom || o.histoire || "") + "</td><td>" + esc(o.enfant || "") + "</td><td>" + esc((o.client || {}).nom || "") + "<br>" + esc((o.client || {}).ville || "") + "</td><td>" + esc(o.total || "") + "</td><td>" + esc(o.nb_photos == null ? "" : o.nb_photos) + '</td><td><button class="btn ghost" data-zip="' + esc(o.ref) + '">Dossier .zip</button></td></tr>';
+          return "<tr><td>" + esc(o.ref) + "</td><td>" + esc(o.histoire_nom || o.histoire || "") + "</td><td>" + esc(o.enfant || "") + "</td><td>" + esc((o.client || {}).nom || "Nom non renseigné") + "<br>" + esc((o.client || {}).telephone || "") + "<br>" + esc((o.client || {}).ville || "") + "</td><td>" + esc(o.total || "") + "</td><td>" + esc(o.nb_photos == null ? "" : o.nb_photos) + '</td><td><button class="btn ghost" data-zip="' + esc(o.ref) + '">Dossier .zip</button></td></tr>';
         }).join("") + "</table>";
       }).catch(function (e) { $("#srvmsg").textContent = e.message || "Serveur injoignable."; });
   };

@@ -29,6 +29,7 @@ import zipfile
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -176,10 +177,8 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
     if o.get("histoire") not in STORIES or o.get("offre") not in OFFERS:
         raise HTTPException(400, "Histoire ou offre inconnue.")
     cli = o.get("client") or {}
-    if len(clean(cli.get("nom"))) < 3:
-        raise HTTPException(400, "Le nom du client est nécessaire.")
     telephone = clean(cli.get("telephone"), 20)
-    if telephone and not re.match(r"^\+2120?[5-7]\d{8}$", telephone):
+    if not re.fullmatch(r"\+212[5-7]\d{8}", telephone):
         raise HTTPException(400, "Numéro de téléphone invalide.")
     # La case est facultative ; sa valeur est conservée dans la commande.
     if len(photos) > MAX_FILES:
@@ -221,7 +220,37 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
     }
     (odir / "order.json").write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     log.info("commande %s reçue (%s, %d photos)", ref, record["histoire"], len(saved))
-    return {"ok": True, "ref": ref, "photos": len(saved)}
+    lines = ["Bonjour Qissa, je viens de commander un livre personnalisé.",
+             "Référence : " + ref,
+             "Histoire : " + record["histoire_nom"],
+             "Prénom de l’enfant : " + record["enfant"]]
+    if record["age"] is not None:
+        lines.append("Âge : " + str(record["age"]) + " ans")
+    if record["naissance"]:
+        lines.append("Date de naissance : " + record["naissance"])
+    if record["genre"]:
+        lines.append("Fille ou garçon : " + record["genre"])
+    if record["avec"]:
+        lines.append("Avec : " + record["avec"])
+    if record["de_la_part_de"]:
+        lines.append("De la part de : " + record["de_la_part_de"])
+    if record["message"]:
+        lines.append("Dédicace : " + record["message"])
+    lines += ["Formule : " + ("Livre et coffret premium" if record["offre"] == "coffret" else "Livre seul"),
+              "Livre : " + str(record["prix"]) + " DH",
+              "Livraison : " + str(record["livraison"]) + " DH",
+              "Total à payer à la livraison : " + str(record["total"]) + " DH"]
+    if record["client"]["nom"]:
+        lines.append("Nom du client : " + record["client"]["nom"])
+    lines.append("Téléphone WhatsApp : " + record["client"]["telephone"])
+    if record["client"]["ville"]:
+        lines.append("Ville : " + record["client"]["ville"])
+    if record["client"]["adresse"]:
+        lines.append("Adresse : " + record["client"]["adresse"])
+    lines.append("Photos : " + (str(len(saved)) + " reçue(s) dans l’Atelier sous cette référence" if saved else "à transmettre ensuite"))
+    whatsapp_number = re.sub(r"\D", "", env("QISSA_WHATSAPP_NUMBER", "212684048495"))
+    return {"ok": True, "ref": ref, "photos": len(saved),
+            "whatsapp_url": "https://wa.me/" + whatsapp_number + "?text=" + quote("\n".join(lines))}
 
 
 # ---------------------------------------------------------------- Atelier

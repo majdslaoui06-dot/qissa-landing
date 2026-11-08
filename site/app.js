@@ -398,11 +398,11 @@
     var h = progress(3, "Commande") + "<h1>Votre commande</h1>" + '<form novalidate data-form="3">' + summary(true);
     h += '<fieldset class="field" style="border:0;padding:0;margin:0;gap:14px"><legend style="font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;margin-bottom:10px">Livraison</legend>';
     h += '<div class="field"><label for="c-nom">Votre nom</label><input id="c-nom" data-c="nom" type="text" placeholder="Nom et prénom" value="' + esc(c.nom) + '" autocomplete="name"></div>';
-    h += '<div class="field"><label for="c-tel">Téléphone (WhatsApp) <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><div style="display:flex;height:52px;border-radius:14px;border:1.5px solid var(--field);background:#fff;overflow:hidden"><span style="display:flex;align-items:center;padding:0 12px;background:#F1E9D6;font-weight:800">+212</span><input id="c-tel" data-c="tel" type="tel" inputmode="tel" placeholder="6 12 34 56 78" value="' + esc(c.tel) + '" autocomplete="tel-national" style="border:0;border-radius:0;height:auto;flex-grow:1;min-width:0"></div></div>';
+    h += '<div class="field"><label for="c-tel">Téléphone (WhatsApp)</label><div style="display:flex;height:52px;border-radius:14px;border:1.5px solid var(--field);background:#fff;overflow:hidden"><span style="display:flex;align-items:center;padding:0 12px;background:#F1E9D6;font-weight:800">+212</span><input id="c-tel" data-c="tel" type="tel" inputmode="tel" placeholder="6 12 34 56 78" value="' + esc(c.tel) + '" autocomplete="tel-national" style="border:0;border-radius:0;height:auto;flex-grow:1;min-width:0"></div></div>';
     h += '<div class="field"><label for="c-ville">Ville <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><select id="c-ville" data-c="ville"><option value=""' + (!c.ville ? " selected" : "") + '>À renseigner plus tard</option>' + VILLES.map(function (v) { return '<option value="' + esc(v) + '"' + (v === c.ville ? " selected" : "") + ">" + esc(v) + "</option>"; }).join("") + "</select></div>";
     h += '<div class="field"><label for="c-adr">Adresse de livraison <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><textarea id="c-adr" data-c="adr" rows="2" placeholder="Vous pourrez la communiquer plus tard sur WhatsApp">' + esc(c.adr) + "</textarea></div></fieldset>";
     h += '<div class="total"><p><span>' + esc(o.nom) + "</span><span>" + money(o.prix) + "</span></p><p><span>Livraison</span><span>" + money(CFG.livraison) + '</span></p><p class="t"><span>À payer à la livraison</span><b>' + money(total()) + "</b></p></div>";
-    h += '<p class="notice">' + ICON_WA + "Vous pouvez commander sans téléphone ni adresse et compléter ces informations ensuite sur WhatsApp.</p>";
+    h += '<p class="notice">' + ICON_WA + "Vous pouvez compléter votre adresse de livraison ensuite sur WhatsApp.</p>";
     h += '<p class="err" role="alert">' + esc(S.err) + '</p><div style="display:flex;flex-direction:column;gap:10px"><button class="btn wa big" type="submit">' + ICON_WA + 'Confirmer ma commande et ouvrir WhatsApp</button><p style="text-align:center;font-size:13px;font-weight:600;color:var(--muted)">Votre commande est d’abord enregistrée chez Qissa. WhatsApp s’ouvre ensuite avec le message déjà préparé.</p></div></form>';
     return h;
   }
@@ -436,7 +436,7 @@
     L.push("Livraison : " + CFG.livraison + " DH");
     L.push("Total à payer à la livraison : " + total() + " DH");
     L.push("Photos : " + (nbPhotos() ? nbPhotos() + (S.serveur ? " (envoyées avec la commande)" : " (je les envoie ici)") : "à envoyer plus tard"));
-    L.push("Nom : " + c.nom);
+    if (c.nom.trim()) L.push("Nom : " + c.nom);
     L.push("Téléphone : " + (phoneDigits(c.tel) ? "+212 " + phoneDigits(c.tel).slice(1) : "à compléter"));
     L.push("Ville : " + (c.ville || "à compléter"));
     L.push("Adresse : " + (c.adr.trim() ? c.adr.replace(/\s*\n\s*/g, ", ") : "à compléter"));
@@ -459,8 +459,7 @@
   }
   function check3() {
     var c = S.cli;
-    if (c.nom.trim().length < 3) return "Indiquez votre nom.";
-    if (String(c.tel || "").trim() && !phoneValid(c.tel)) return "Vérifiez votre numéro WhatsApp ou laissez ce champ vide pour le compléter plus tard.";
+    if (!phoneValid(c.tel)) return "Indiquez un numéro WhatsApp valide pour confirmer la commande.";
     return "";
   }
 
