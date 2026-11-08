@@ -92,3 +92,9 @@
 .q-form .q-inline-error{color:#ffdf7a;font-size:12px;font-weight:800;line-height:1.4}
 .q-form .q-field [aria-invalid=true]{border:2px solid #ffbe36;box-shadow:0 0 0 3px #ffbe3640}
 .q-order-dock .q-button{position:relative;z-index:1;touch-action:manipulation}
+
+.q-main-image>.q-gallery-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#101a48;z-index:1}
+.q-main-image>.q-gallery-video[hidden]{display:none!important}
+.q-main-image .q-prev,.q-main-image .q-next{z-index:2}
+.q-thumbs .q-video-thumb{position:relative}
+.q-thumbs .q-video-thumb span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#182254e8;color:#fff;font-size:10px;padding-left:2px;box-shadow:0 2px 6px #0005}

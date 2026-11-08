@@ -58,8 +58,8 @@ PHOTO_TTL_DAYS = float(env("ORDER_PHOTO_TTL_DAYS", "30"))
 SALT = env("IP_SALT") or secrets.token_hex(8)
 
 REF_RE = re.compile(r"^[A-Z]{2,4}-\d{4}-[A-Z0-9]{3,10}$")
-PHOTO_RE = re.compile(r"^(enfant-[1-3]|parent-[1-2]|etape-(naissance|4mois|8mois|1an))\.jpg$")
-STORIES = {"capitaine", "super", "supersara", "ballet", "iletaitunefois", "parc", "premiereannee"}
+PHOTO_RE = re.compile(r"^(enfant-[1-3]|parent-[1-2]|etape-(naissance|4mois|8mois|1an)|doudou-1)\.jpg$")
+STORIES = {"capitaine", "super", "supersara", "ballet", "iletaitunefois", "parc", "premiereannee", "samyetmomo"}
 OFFER_PRICES = {"livre": 199, "coffret": 289}
 OFFERS = set(OFFER_PRICES)
 DELIVERY_PRICE = 35
