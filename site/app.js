@@ -264,13 +264,13 @@
   var S = {
     step: 1, done: false, ref: "",
     nom: cleanName(q.get("nom")),
-    age: parseInt(q.get("age"), 10) || story.age_min || 3,
+    age: parseInt(q.get("age"), 10) || story.age_min || 3, ageMode: "standard", ageAutre: "",
     naissance: q.get("naissance") || "",
     genre: q.get("genre") === "fille" ? "fille" : (story.genre === "elle" ? "fille" : "garcon"),
     v: q.get("v") === "fille" ? "fille" : "garcon",
     avec: q.get("avec") === "Papa" ? "Papa" : "Maman",
     child: [], parent: [], miles: {}, consent: false,
-    giver: "Maman et Papa", autre: "", msg: "", offre: CFG.offreParDefaut || "coffret",
+    giver: "Maman", autre: "", msg: "", offre: CFG.offreParDefaut || "coffret",
     cli: { nom: "", tel: "", ville: "", adr: "" },
     err: "", sending: false, serveur: false
   };
@@ -342,7 +342,7 @@
   }
   function summary(showEdit) {
     var o = offer();
-    var sub = isBebe ? (S.naissance ? "Né(e) le " + fmtDate(S.naissance) : "") : S.age + " ans";
+    var sub = isBebe ? (S.naissance ? "Né(e) le " + fmtDate(S.naissance) : "") : (S.ageMode === "autre" ? S.ageAutre : S.age + " ans");
     return '<div class="sum"><img src="' + coverSrc() + '" alt="' + esc(altTxt()) + '"><span class="n"><b>' + esc(title()) + "</b><span>" + esc(sub) + (sub ? " · " : "") + esc(o.nom.toLowerCase().replace(/^le /, "Le ")) + "<br>" + nbPhotos() + " photo" + (nbPhotos() > 1 ? "s" : "") + (S.step === 3 ? " · Dédicace de " + esc(giver()) : "") + "</span>" + (showEdit ? '<button class="link" type="button" data-go="1" style="align-self:flex-start">Modifier</button>' : "") + '</span><span class="p">' + money(o.prix) + "</span></div>";
   }
   function fmtDate(d) { var m = String(d).match(/^(\d{4})-(\d\d)-(\d\d)$/); return m ? m[3] + "/" + m[2] + "/" + m[1] : d; }
@@ -354,8 +354,9 @@
     h += '<div class="row2"><div class="field"><label for="f-nom">' + (isBebe ? "Son nom" : "Son nom") + '</label><input id="f-nom" data-k="nom" type="text" maxlength="' + (CFG.nomMax || 16) + '" value="' + esc(S.nom) + '" autocomplete="off"></div>';
     if (isBebe) h += '<div class="field"><label for="f-nais">Sa date de naissance</label><input id="f-nais" data-k="naissance" type="date" value="' + esc(S.naissance) + '" max="' + new Date().toISOString().slice(0, 10) + '"></div></div>';
     else {
-      var opts = ""; for (var a = story.age_min || CFG.ageMin || 3; a <= (story.age_max || CFG.ageMax || 12); a++) opts += '<option value="' + a + '"' + (a === S.age ? " selected" : "") + ">" + a + " ans</option>";
-      h += '<div class="field"><label for="f-age">Son âge</label><select id="f-age" data-k="age">' + opts + "</select></div></div>";
+      var opts = ""; for (var a = story.age_min || CFG.ageMin || 3; a <= (story.age_max || CFG.ageMax || 12); a++) opts += '<option value="' + a + '"' + (S.ageMode === "standard" && a === S.age ? " selected" : "") + ">" + a + " ans</option>";
+      h += '<div class="field"><label for="f-age">Son âge</label><select id="f-age" data-k="age">' + opts + '<option value="autre"' + (S.ageMode === "autre" ? " selected" : "") + '>Autre</option></select></div></div>';
+      if (S.ageMode === "autre") h += '<div class="field"><label for="f-age-autre">Précisez son âge</label><input id="f-age-autre" data-k="ageAutre" type="text" maxlength="30" value="' + esc(S.ageAutre) + '" placeholder="Ex. 2 ans et demi ou 18 mois"></div>';
     }
     if (hasGender) {
       h += '<fieldset class="box"><legend class="l">' + (isParc ? "Pour qui, avec qui ?" : "C’est…") + '</legend><span class="own">Propre à cette histoire</span>';
@@ -383,7 +384,7 @@
   function step2() {
     var h = progress(2, "Dédicace et offre") + '<form novalidate data-form="2" style="margin-top:18px">' + summary(true);
     h += '<fieldset class="field" style="border:0;padding:0;margin:0;gap:12px"><legend style="font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;margin-bottom:10px">Votre dédicace</legend><p style="font-weight:800">Qui offre le livre ?</p>';
-    h += '<div class="seg" role="group" aria-label="Qui offre le livre">' + (CFG.relations || []).map(function (r) { return '<button type="button" data-seg="giver" data-val="' + esc(r) + '" aria-pressed="' + (r === S.giver ? "true" : "false") + '">' + esc(r === "Autre" ? "Autre…" : r) + "</button>"; }).join("") + "</div>";
+    h += '<div class="field"><label for="f-giver">De la part de</label><select id="f-giver" data-k="giver">' + ["Maman", "Tati / Tante", "Mamie / Grand-mère", "Papa", "Autre"].map(function (r) { return '<option value="' + esc(r) + '"' + (r === S.giver ? " selected" : "") + '>' + esc(r) + '</option>'; }).join("") + "</select></div>";
     if (S.giver === "Autre") h += '<div class="field"><label for="f-autre">De la part de</label><input id="f-autre" data-k="autre" type="text" maxlength="30" value="' + esc(S.autre) + '" placeholder="Mamie, Tonton…"></div>';
     h += '<div class="field"><label for="f-msg">Votre message <span style="font-weight:600;color:var(--muted)">(facultatif)</span></label><textarea id="f-msg" data-k="msg" rows="3" maxlength="' + (CFG.dedicaceMax || 180) + '">' + esc(S.msg) + '</textarea><span id="cnt" style="align-self:flex-end;font-size:13px;font-weight:700;color:var(--muted)">' + S.msg.length + " / " + (CFG.dedicaceMax || 180) + "</span></div></fieldset>";
     h += '<fieldset class="field" style="border:0;padding:0;margin:0;gap:10px"><legend style="font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;margin-bottom:10px">Votre offre</legend>';
@@ -427,7 +428,7 @@
     L.push("Réf : " + S.ref);
     L.push("Histoire : " + story.nom);
     L.push("Enfant : " + S.nom);
-    if (isBebe) L.push("Naissance : " + (fmtDate(S.naissance) || "non précisée")); else L.push("Âge : " + S.age + " ans");
+    if (isBebe) L.push("Naissance : " + (fmtDate(S.naissance) || "non précisée")); else L.push("Âge : " + (S.ageMode === "autre" ? S.ageAutre : S.age + " ans"));
     if (hasGender) L.push("Genre : " + (S.genre === "fille" ? "fille" : "garçon"));
     if (isParc) L.push("Avec : " + S.avec);
     L.push("De la part de : " + giver());
@@ -454,6 +455,7 @@
   /* ---------- validation ---------- */
   function check1() {
     if (S.nom.length < 2) return "Indiquez son nom.";
+    if (S.ageMode === "autre" && !S.ageAutre.trim()) return "Précisez son âge.";
     if (isBebe && !S.naissance) return "Indiquez sa date de naissance.";
     return "";
   }
@@ -467,7 +469,7 @@
   function upload() {
     var fd = new FormData(), n = 0;
     // Les prix et la référence sont recalculés/créés côté serveur.
-    var order = { histoire: story.slug, histoire_nom: story.nom, version: "", enfant: S.nom, age: isBebe ? null : S.age, naissance: isBebe ? S.naissance : "", genre: S.genre, avec: isParc ? S.avec : "",
+    var order = { histoire: story.slug, histoire_nom: story.nom, version: "", enfant: S.nom, age: isBebe || S.ageMode === "autre" ? null : S.age, age_texte: isBebe ? "" : (S.ageMode === "autre" ? S.ageAutre.trim() : S.age + " ans"), naissance: isBebe ? S.naissance : "", genre: S.genre, avec: isParc ? S.avec : "",
       de_la_part_de: giver(), message: S.msg, offre: S.offre,
       client: { nom: S.cli.nom.trim(), telephone: phoneDigits(S.cli.tel) ? "+212" + phoneDigits(S.cli.tel).slice(1) : "", ville: S.cli.ville, adresse: S.cli.adr.trim() }, consentement_parent: nbPhotos() ? !!S.consent : false };
     fd.append("order", JSON.stringify(order));
@@ -495,13 +497,13 @@
     if (c) { S.cli[c] = t.value; return; }
     if (!k) return;
     if (k === "nom") S.nom = t.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ' \-]/g, "");
-    else if (k === "age") S.age = parseInt(t.value, 10);
+    else if (k === "age") { S.ageMode = t.value === "autre" ? "autre" : "standard"; if (S.ageMode === "standard") S.age = parseInt(t.value, 10); }
     else if (k === "consent") S.consent = t.checked;
     else if (k === "offre") { S.offre = t.value; var b = $("#cont"); if (b) b.textContent = "Continuer · " + money(offer().prix); }
     else if (k === "msg") { S.msg = t.value; var n = $("#cnt"); if (n) n.textContent = S.msg.length + " / " + (CFG.dedicaceMax || 180); }
     else S[k] = t.value;
   });
-  app.addEventListener("change", function (e) { if (e.target.getAttribute("data-k") === "nom") { S.nom = cleanName(S.nom); e.target.value = S.nom; } });
+  app.addEventListener("change", function (e) { var k = e.target.getAttribute("data-k"); if (k === "nom") { S.nom = cleanName(S.nom); e.target.value = S.nom; } else if (k === "age" || k === "giver") rerender(); });
   app.addEventListener("click", function (e) {
     var t = e.target.closest("button, a"); if (!t) return;
     var sg = t.getAttribute("data-seg");

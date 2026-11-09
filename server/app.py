@@ -208,7 +208,8 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
         "status": "reçue",
         "histoire": o["histoire"], "histoire_nom": clean(o.get("histoire_nom"), 60),
         "version": clean(o.get("version"), 10),
-        "enfant": clean(o.get("enfant"), 30), "age": o.get("age") if isinstance(o.get("age"), int) else None,
+        "enfant": clean(o.get("enfant"), 30), "age": o.get("age") if type(o.get("age")) is int else None,
+        "age_texte": clean(o.get("age_texte"), 30),
         "naissance": clean(o.get("naissance"), 10), "genre": clean(o.get("genre"), 10), "avec": clean(o.get("avec"), 10),
         "de_la_part_de": clean(o.get("de_la_part_de"), 40), "message": clean(o.get("message"), 200),
         "offre": o["offre"], "prix": price, "livraison": delivery,
@@ -224,7 +225,9 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
              "Référence : " + ref,
              "Histoire : " + record["histoire_nom"],
              "Prénom de l’enfant : " + record["enfant"]]
-    if record["age"] is not None:
+    if record["age_texte"]:
+        lines.append("Âge : " + record["age_texte"])
+    elif record["age"] is not None:
         lines.append("Âge : " + str(record["age"]) + " ans")
     if record["naissance"]:
         lines.append("Date de naissance : " + record["naissance"])
