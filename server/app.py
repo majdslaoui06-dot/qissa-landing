@@ -319,6 +319,18 @@ class Site(StaticFiles):
         if path.startswith("src"):  # sources : pas publiées
             from starlette.exceptions import HTTPException as SHTTP
             raise SHTTP(404)
+        public_pages = {
+            "index.html", "commander.html", "partager.html",
+            "mentions-legales.html", "confidentialite.html",
+            *(f"histoires/{slug}.html" for slug in STORIES),
+        }
+        if path in public_pages:
+            from starlette.responses import RedirectResponse
+            clean = "/" if path == "index.html" else "/" + path[:-5]
+            query = scope.get("query_string", b"").decode("latin-1")
+            return RedirectResponse(clean + ("?" + query if query else ""), status_code=308)
+        if path + ".html" in public_pages:
+            path += ".html"
         return await super().get_response(path, scope)
 
 

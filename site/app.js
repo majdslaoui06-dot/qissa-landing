@@ -25,7 +25,7 @@
   fbq("track", "PageView");
 
   var path = window.location.pathname;
-  var storyMatch = path.match(/\/histoires\/([^/]+)\.html$/);
+  var storyMatch = path.match(/\/histoires\/([^/]+)(?:\.html)?$/);
 
   if (storyMatch) {
     fbq("track", "ViewContent", {
@@ -35,7 +35,7 @@
     });
   }
 
-  if (/\/commander\.html$/.test(path) && new URLSearchParams(window.location.search).get("h")) {
+  if (/\/commander(?:\.html)?$/.test(path) && new URLSearchParams(window.location.search).get("h")) {
     fbq("track", "InitiateCheckout", {
       content_category: "Livre personnalisé"
     });
@@ -92,7 +92,7 @@
     ttq.page();
 
     var path = window.location.pathname;
-    var storyMatch = path.match(/\/histoires\/([^/]+)\.html$/);
+    var storyMatch = path.match(/\/histoires\/([^/]+)(?:\.html)?$/);
 
     if (storyMatch) {
       ttq.track("ViewContent", {
@@ -102,7 +102,7 @@
       });
     }
 
-    if (/\/commander\.html$/.test(path) && new URLSearchParams(window.location.search).get("h")) {
+    if (/\/commander(?:\.html)?$/.test(path) && new URLSearchParams(window.location.search).get("h")) {
       ttq.track("InitiateCheckout", {
         content_type: "product"
       });
@@ -136,7 +136,7 @@
   window.gtag("config", GA_ID);
 
   var path = window.location.pathname;
-  var storyMatch = path.match(/\/histoires\/([^/]+)\.html$/);
+  var storyMatch = path.match(/\/histoires\/([^/]+)(?:\.html)?$/);
   var stories = window.QISSA_STORIES || [];
 
   function findStory(slug) {
@@ -161,7 +161,7 @@
   }
 
   // Entrée dans le tunnel de commande = begin_checkout.
-  if (/\/commander\.html$/.test(path)) {
+  if (/\/commander(?:\.html)?$/.test(path)) {
     var checkoutSlug = new URLSearchParams(window.location.search).get("h");
     if (checkoutSlug) {
       var checkoutStory = findStory(checkoutSlug);
@@ -208,7 +208,7 @@
       actions.className = "qissa-float-actions";
       var onStory = /\/histoires\/[^/]+\.html$/.test(location.pathname);
       var onHome = /\/(?:index\.html)?$/.test(location.pathname) || location.pathname === "/";
-      var ctaHref = onStory ? "#personnaliser" : (onHome ? "#histoires" : "index.html#histoires");
+      var ctaHref = onStory ? "#personnaliser" : (onHome ? "#histoires" : "/#histoires");
       actions.innerHTML = '<a class="qissa-float-cta" href="' + ctaHref + '">Personnaliser le livre de mon enfant</a>' +
         '<a class="qissa-float-wa" href="' + waUrl("Bonjour Qissa, j’aimerais personnaliser un livre pour mon enfant.") + '" target="_blank" rel="noopener" aria-label="Contacter Qissa sur WhatsApp">' +
         '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.04 3C9.01 3 3.3 8.7 3.3 15.72c0 2.25.59 4.46 1.71 6.4L3.2 28.75l6.79-1.78a12.7 12.7 0 0 0 6.04 1.54h.01c7.02 0 12.73-5.7 12.73-12.72C28.77 8.7 23.06 3 16.04 3Zm0 23.36h-.01c-1.85 0-3.67-.5-5.25-1.44l-.38-.23-4.03 1.06 1.08-3.93-.25-.4a10.54 10.54 0 0 1-1.62-5.7c0-5.8 4.73-10.52 10.55-10.52 5.82 0 10.55 4.72 10.55 10.52 0 5.8-4.73 10.64-10.64 10.64Zm5.79-7.9c-.32-.16-1.87-.92-2.16-1.03-.29-.1-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.18.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.88-1.77-2.2-.18-.32-.02-.49.14-.65.14-.14.32-.37.47-.55.16-.18.21-.32.32-.53.1-.21.05-.4-.03-.55-.08-.16-.71-1.71-.97-2.34-.26-.62-.52-.54-.71-.55h-.61c-.21 0-.55.08-.84.4-.29.32-1.11 1.08-1.11 2.64 0 1.55 1.13 3.05 1.29 3.26.16.21 2.22 3.39 5.38 4.75.75.32 1.34.52 1.8.66.76.24 1.45.21 2 .13.61-.09 1.87-.76 2.14-1.5.26-.74.26-1.37.18-1.5-.08-.13-.29-.21-.61-.37Z"/></svg></a>';
@@ -253,7 +253,7 @@
 
   var STORIES = window.QISSA_STORIES, q = new URLSearchParams(location.search);
   var story = STORIES.filter(function (s) { return s.slug === q.get("h"); })[0];
-  if (!story) { location.replace("index.html#histoires"); return; }
+  if (!story) { location.replace("/#histoires"); return; }
   var isParc = story.slug === "parc", isBebe = false, hasGender = (story.extras || []).indexOf("gender") > -1 || story.slug === "parc" || story.slug === "premiereannee";
   var MILES = [["naissance", "Naissance"], ["4mois", "4 mois"], ["8mois", "8 mois"], ["1an", "1 an"]];
   var VILLES = ["Casablanca", "Rabat", "Marrakech", "Tanger", "Fès", "Agadir", "Meknès", "Oujda", "Kénitra", "Tétouan", "Salé", "Témara", "Mohammédia", "El Jadida", "Nador", "Béni Mellal", "Settat", "Khouribga", "Safi", "Essaouira", "Laâyoune", "Dakhla", "Errachidia", "Ouarzazate", "Taza", "Berkane", "Larache", "Al Hoceïma", "Khémisset", "Autre ville"];
@@ -417,7 +417,7 @@
     h += '<ol><li>Votre commande est déjà enregistrée chez Qissa.</li><li>Le jour même, vous recevez l’aperçu de son livre dans votre conversation WhatsApp.</li><li>Après votre accord, le livre est imprimé, puis livré chez vous.</li><li>Vous payez ' + money(total()) + " à la livraison.</li></ol>";
     if (!S.serveur && nbPhotos()) h += '<p class="info" style="text-align:left">' + ICON_WA + "N’oubliez pas de joindre vos photos dans la conversation WhatsApp, avec la référence " + esc(S.ref) + ".</p>";
     h += '<details style="width:100%;text-align:left"><summary style="cursor:pointer;font-weight:800">Le message n’a pas pu s’ouvrir ?</summary><div class="msg" id="msgtxt">' + esc(msg) + '</div><button class="btn ghost" type="button" data-copy style="margin-top:10px;height:44px">Copier le message</button></details>';
-    h += '<a href="index.html" style="font-weight:800">Retour aux histoires</a></div>';
+    h += '<a href="/" style="font-weight:800">Retour aux histoires</a></div>';
     return h;
   }
 
@@ -617,9 +617,9 @@
     }
   });
   $("#back").addEventListener("click", function () {
-    if (S.done) return (location.href = "index.html");
+    if (S.done) return (location.href = "/");
     if (S.step > 1) { S.step--; S.err = ""; return render(); }
-    location.href = "histoires/" + story.slug + ".html";
+    location.href = "histoires/" + story.slug;
   });
   render();
 })();
