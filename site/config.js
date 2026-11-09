@@ -14,8 +14,8 @@ window.QISSA_CONFIG = {
   devise: "DH",
   livraison: 35, // frais fixes, payés à la livraison
   offres: [
-    { id: "livre",   nom: "Le livre",   prix: 199, detail: "Format carré 21 × 21 cm, 24 pages" },
-    { id: "coffret", nom: "Le livre dans son coffret", prix: 289, detail: "Coffret bleu nuit 25 × 25 × 3 cm" }
+    { id: "livre",   nom: "Le livre",   prix: 195, detail: "Format carré 21 × 21 cm, 28 pages" },
+    { id: "coffret", nom: "Le livre dans son coffret", prix: 289, detail: "Coffret bleu nuit 28 × 28 × 4 cm" }
   ],
   offreParDefaut: "coffret",
 

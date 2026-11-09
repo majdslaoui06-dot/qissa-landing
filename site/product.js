@@ -18,7 +18,7 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){setInterval(()=>{ord
 
 const dock=document.createElement('div');dock.className='q-order-dock';
 const dockCopy=document.createElement('div'),dockTitle=document.createElement('strong'),dockPrice=document.createElement('span'),dockButton=document.createElement('button');
-dockTitle.textContent=document.querySelector('.q-info h1').textContent;dockPrice.textContent='234 DH · livraison incluse';dockButton.type='button';dockButton.textContent='Commander ce livre';dockButton.className='q-button';dockButton.setAttribute('aria-label','Commander '+dockTitle.textContent);
+dockTitle.textContent=document.querySelector('.q-info h1').textContent;dockPrice.textContent='230 DH · livraison incluse';dockButton.type='button';dockButton.textContent='Commander ce livre';dockButton.className='q-button';dockButton.setAttribute('aria-label','Commander '+dockTitle.textContent);
 dockCopy.append(dockTitle,dockPrice);dock.append(dockCopy,dockButton);document.body.append(dock);
 dockButton.onclick=()=>confirm.click();
 form.addEventListener('input',()=>{dockPrice.textContent=(Number(form.elements.offre.value)+35)+' DH · livraison incluse';});
@@ -35,7 +35,7 @@ const alertBox=document.createElement('div');alertBox.className='q-form-alert';a
 function clearValidation(field){field.removeAttribute('aria-invalid');field.closest('.q-field')?.querySelector('.q-inline-error')?.remove();if(!form.querySelector('[aria-invalid=true]'))alertBox.hidden=true;}
 function showValidation(field,message){form.querySelectorAll('[aria-invalid=true]').forEach(clearValidation);alertBox.textContent='Votre commande n’est pas encore envoyée. '+message;alertBox.hidden=false;error.textContent=message;field.setAttribute('aria-invalid','true');const label=field.closest('.q-field');if(label){const inline=document.createElement('span');inline.className='q-inline-error';inline.textContent=message;label.append(inline);}field.focus({preventScroll:true});field.scrollIntoView({behavior:'smooth',block:'center'});}
 form.addEventListener('input',e=>{const field=e.target;if(field.matches?.('[aria-invalid=true]')){const min=field.name==='nom'?2:0;if(field.checkValidity()&&field.value.trim().length>=min)clearValidation(field);}});
-setConfirmLabel('Commander ce livre · 234 DH');
+setConfirmLabel('Commander ce livre · 230 DH');
 confirm.onclick=async()=>{if(completed)return;error.textContent='';result.hidden=true;
  const required=[...form.querySelectorAll('input[required],select[required],textarea[required]')].find(field=>!field.checkValidity());
  if(required){const label=required.closest('.q-field')?.firstChild?.textContent?.trim()||'ce champ';const message=required.name==='telephone'?'Indiquez votre numéro WhatsApp pour que Qissa puisse vous contacter.':'Veuillez renseigner '+label.toLowerCase()+'.';showValidation(required,message);return;}

@@ -112,3 +112,9 @@
 @keyframes q-gold-buzz{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-.75px) rotate(-.2deg)}50%{transform:translateX(.75px) rotate(.2deg)}75%{transform:translateX(-.5px) rotate(.12deg)}}
 @media(max-width:760px){.q-form #q-confirm,.q-form #q-confirm:hover{grid-template-columns:70px minmax(0,1fr) 32px;gap:5px;min-height:64px;padding:7px 9px;font-size:12px}.q-confirm-logo{height:38px;padding-right:4px}.q-confirm-cart{width:31px;height:34px}}
 @media(prefers-reduced-motion:reduce){.q-form #q-confirm{animation:none!important}.q-confirm-logo{transition:none}}
+
+/* Fixed order action: a short yellow vibration brings it back into view. */
+.q-order-dock .q-button,.q-order-dock .q-button:hover{border:2px solid #ffbe36;box-shadow:0 4px 0 #11183e;animation:q-order-dock-prompt 8s ease-in-out infinite}
+.q-order-dock .q-button:disabled{animation:none}
+@keyframes q-order-dock-prompt{0%,79%,100%{transform:translateX(0);background:#182254;color:#fff;box-shadow:0 4px 0 #11183e}81%,85%,89%,93%{transform:translateX(-2px);background:#ffbe36;color:#182254;box-shadow:0 4px 0 #d39820}83%,87%,91%,95%{transform:translateX(2px);background:#ffbe36;color:#182254;box-shadow:0 4px 0 #d39820}97%{transform:translateX(0);background:#ffbe36;color:#182254;box-shadow:0 4px 0 #d39820}}
+@media(prefers-reduced-motion:reduce){.q-order-dock .q-button{animation:none!important}}
