@@ -81,7 +81,7 @@ def _send(api_key: str, sender: str, recipient: str, order: dict, group: list[Pa
     req = request.Request(
         "https://api.resend.com/emails",
         data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-        headers={"Authorization": "Bearer " + api_key, "Content-Type": "application/json", "Idempotency-Key": f"qissa-order-{ref}-part-{part}"},
+        headers={"Authorization": "Bearer " + api_key, "Content-Type": "application/json", "User-Agent": "Qissa-Orders/1.0", "Idempotency-Key": f"qissa-order-{ref}-part-{part}"},
         method="POST",
     )
     with request.urlopen(req, timeout=30) as response:
