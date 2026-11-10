@@ -36,6 +36,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, ImageOps
+from server.order_email import enqueue as enqueue_order_email, send_pending as send_pending_order_emails
 
 log = logging.getLogger("qissa")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -146,13 +147,29 @@ async def cleanup_loop():
         await asyncio.sleep(3600)
 
 
+async def email_loop():
+    while True:
+        try:
+            await asyncio.to_thread(
+                send_pending_order_emails, ORDERS,
+                env("QISSA_RESEND_API_KEY"),
+                env("QISSA_EMAIL_FROM"),
+                env("QISSA_NOTIFICATION_TO"),
+            )
+        except Exception:
+            log.exception("notifications email")
+        await asyncio.sleep(15)
+
+
 @asynccontextmanager
 async def lifespan(_app):
     ORDERS.mkdir(parents=True, exist_ok=True)
     task = asyncio.create_task(cleanup_loop())
+    email_task = asyncio.create_task(email_loop())
     log.info("Qissa prêt · origines %s · Atelier %s", ORIGINS, "actif" if ADMIN_TOKEN else "désactivé (ADMIN_TOKEN absent)")
     yield
     task.cancel()
+    email_task.cancel()
 
 
 app = FastAPI(title="Qissa · commandes", docs_url=None, redoc_url=None, lifespan=lifespan)
@@ -220,6 +237,7 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
         "photos": sorted(saved),
     }
     (odir / "order.json").write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    enqueue_order_email(odir)
     log.info("commande %s reçue (%s, %d photos)", ref, record["histoire"], len(saved))
     lines = ["Bonjour Qissa, je viens de commander un livre personnalisé.",
              "Référence : " + ref,
@@ -268,6 +286,12 @@ async def admin_orders(request: Request):
         except Exception:
             continue
         o["nb_photos"] = len(list((p.parent / "photos").glob("*.jpg")))
+        email_status = p.parent / "email-status.json"
+        if email_status.exists():
+            try:
+                o["notification_email"] = json.loads(email_status.read_text(encoding="utf-8")).get("state", "pending")
+            except (OSError, ValueError):
+                o["notification_email"] = "pending"
         rows.append(o)
     rows.sort(key=lambda r: r.get("created_at") or "", reverse=True)
     return {"orders": rows}
