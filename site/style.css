@@ -36,21 +36,23 @@ p{margin:0}
 
 /* hero */
 .hero{padding:56px 0 40px;overflow:hidden}
-.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero .wrap{max-width:960px}
 .eyebrow{font-weight:800;font-size:14px;color:var(--muted);margin-bottom:14px}
 .hero h1{font-size:clamp(38px,5.6vw,68px)}
 .hero h1 em{font-style:normal;color:var(--coral-ink)}
-.hero .lead{font-size:19px;color:var(--muted);margin:20px 0 26px;max-width:34em}
+.hero .lead{font-size:19px;color:var(--muted);margin:20px 0 26px;max-width:40em}
 .hero .row{display:flex;flex-wrap:wrap;gap:12px}
 .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
 .pill{display:inline-flex;align-items:center;height:32px;padding:0 14px;border-radius:999px;background:var(--tag);font-size:13px;font-weight:800}
 .pill.mint{background:var(--mint-tag)}
-.fan{position:relative;height:440px;isolation:isolate}
-.fan img{position:absolute;width:52%;border-radius:6px;box-shadow:0 18px 34px rgba(22,33,92,.28);will-change:transform,left,right,top}
-.fan img:nth-child(1){left:0;top:40px;transform:rotate(-7deg);animation:qissaFanLeft 4s ease-in-out infinite}
-.fan img:nth-child(2){left:24%;top:0;transform:rotate(2deg);z-index:2;animation:qissaFanCenter 4s ease-in-out infinite}
-.fan img:nth-child(3){right:0;top:60px;transform:rotate(8deg);animation:qissaFanRight 4s ease-in-out infinite}
-.fan:hover img{animation-play-state:paused}
+.fan{position:relative;height:440px;max-width:660px;margin:22px auto 0;isolation:isolate}
+.fan a{position:absolute;display:block;width:52%;border-radius:6px;box-shadow:0 18px 34px rgba(22,33,92,.28);will-change:transform,left,right,top}
+.fan a img{display:block;width:100%;border-radius:6px}
+.fan a:nth-child(1){left:0;top:40px;transform:rotate(-7deg);animation:qissaFanLeft 4s ease-in-out infinite}
+.fan a:nth-child(2){left:24%;top:0;transform:rotate(2deg);z-index:2;animation:qissaFanCenter 4s ease-in-out infinite}
+.fan a:nth-child(3){right:0;top:60px;transform:rotate(8deg);animation:qissaFanRight 4s ease-in-out infinite}
+.fan:hover a{animation-play-state:paused}
+.fan a:focus-visible{outline:4px solid var(--coral);outline-offset:4px;z-index:4}
 @keyframes qissaFanLeft{0%,42%,100%{left:0;top:40px;transform:rotate(-7deg) scale(1)}52%,90%{left:0;top:86px;transform:rotate(-4deg) scale(.62)}}
 @keyframes qissaFanCenter{0%,42%,100%{left:24%;top:0;transform:rotate(2deg) scale(1)}52%,90%{left:24%;top:86px;transform:rotate(0deg) scale(.62)}}
 @keyframes qissaFanRight{0%,42%,100%{right:0;top:60px;transform:rotate(8deg) scale(1)}52%,90%{right:0;top:86px;transform:rotate(4deg) scale(.62)}}
@@ -90,6 +92,25 @@ section{padding:64px 0}
 .card.sur p{color:#C9CDE6;flex-grow:0;font-size:17px}
 .card.sur .hand{color:var(--gold);font-size:24px}
 .card[hidden]{display:none}
+/* Accueil : sélection de quatre livres, puis catalogue complet. */
+.best-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.best-grid .card h3{font-size:21px}
+.best-grid .card .bd{padding:17px 15px}
+.all-stories{background:#fffaf2}
+.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 24px;max-width:960px;margin:0 auto}
+.catalog-grid .card{background:transparent;border:0;border-radius:0;box-shadow:none}
+.catalog-grid .card:hover{box-shadow:none}
+.catalog-grid .card .im{padding:12px;background:#f5ecde}
+.catalog-grid .card .im img{width:100%;aspect-ratio:1;object-fit:contain;margin:0;box-shadow:none}
+.catalog-grid .card .bd{padding:12px 0 0;gap:5px}
+.catalog-grid .card .tags{display:none}
+.catalog-grid .card .age-row{order:3;display:flex;flex-wrap:wrap;gap:4px}
+.catalog-grid .card .age-chip{border:0;background:transparent;padding:0;font-size:14px;color:var(--muted)}
+.catalog-grid .card .age-chip:not(:last-child)::after{content:' ·';margin-right:2px}
+.catalog-grid .card p{flex-grow:0}
+.catalog-grid .card .foot{order:4;margin-top:5px}
+.catalog-grid .card .foot i{display:none}
+.catalog-grid .card .foot b{color:#176158}
 
 /* comment ça marche */
 .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;counter-reset:s}
@@ -372,9 +393,9 @@ fieldset.field{border:0;padding:0;margin:0;min-width:0}
 .qissa-float-wa svg{width:31px;height:31px;display:block;fill:currentColor}
 @keyframes qissaGoldPulse{0%,100%{box-shadow:0 10px 28px rgba(22,33,92,.22),0 0 0 0 rgba(255,190,54,.55);filter:brightness(1)}50%{box-shadow:0 12px 34px rgba(22,33,92,.28),0 0 0 10px rgba(255,190,54,0);filter:brightness(1.08)}}
 @keyframes qissaWaPulse{0%,100%{transform:scale(1);box-shadow:0 10px 28px rgba(22,33,92,.25),0 0 0 0 rgba(255,190,54,.62)}50%{transform:scale(1.07);box-shadow:0 12px 34px rgba(22,33,92,.30),0 0 0 12px rgba(255,190,54,0)}}
-@media(max-width:900px){.fan img{width:49%}}
-@media(max-width:600px){body{padding-bottom:92px}.qissa-float-actions{left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:minmax(0,1fr) 56px;align-items:center;gap:9px}.qissa-float-cta{max-width:none;width:100%;min-height:54px;padding:10px 14px;font-size:14.5px}.qissa-float-wa{width:56px;height:56px}.qissa-float-wa svg{width:29px;height:29px}.fan{height:288px;overflow:visible}.fan img{width:51%}}
-@media(prefers-reduced-motion:reduce){.qissa-float-cta,.qissa-float-wa,.fan img{animation:none!important}}
+@media(max-width:900px){.fan a{width:49%}}
+@media(max-width:600px){body{padding-bottom:92px}.qissa-float-actions{left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:minmax(0,1fr) 56px;align-items:center;gap:9px}.qissa-float-cta{max-width:none;width:100%;min-height:54px;padding:10px 14px;font-size:14.5px}.qissa-float-wa{width:56px;height:56px}.qissa-float-wa svg{width:29px;height:29px}.fan{height:288px;overflow:visible}.fan a{width:51%}}
+@media(prefers-reduced-motion:reduce){.qissa-float-cta,.qissa-float-wa,.fan a{animation:none!important}}
 
 /* --------------------------------------------------------------------------
    Qissa V6 — mobile-first UX refinement
@@ -403,7 +424,7 @@ fieldset.field{border:0;padding:0;margin:0;min-width:0}
   .pills{margin-top:15px;gap:6px}
   .pill{height:28px;padding:0 10px;font-size:11.5px}
   .fan{height:224px;max-width:340px;margin:0 auto}
-  .fan img{width:47%}
+  .fan a{width:47%}
 
   /* Global rhythm + headings */
   section{padding:34px 0}
@@ -592,3 +613,16 @@ fieldset.field{border:0;padding:0;margin:0;min-width:0}
 footer .qissa-animated-logo{width:150px;height:68px;margin-bottom:12px}
 .top .brand .qissa-animated-logo{height:40px;width:105px}
 @media(max-width:600px){.top .brand .qissa-animated-logo{height:36px;width:100px}}
+@media(max-width:700px){
+  .all-stories .sec-head{text-align:left}
+  .catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 12px;margin:0;padding:0;overflow:visible}
+  .catalog-grid .card{display:flex;flex:auto;min-width:0;scroll-snap-align:none}
+  .catalog-grid .card .im{padding:7px}
+  .catalog-grid .card .im img{max-height:none;aspect-ratio:1;object-fit:contain;margin:0}
+  .catalog-grid .card .bd{padding:9px 0 0;gap:4px}
+  .catalog-grid .card h3{font-size:16px;line-height:1.18}
+  .catalog-grid .card p{font-size:12px;line-height:1.35}
+  .catalog-grid .card .age-chip{font-size:11.5px}
+  .catalog-grid .card .foot b{font-size:14px}
+}
+@media(max-width:380px){.catalog-grid .card{flex-basis:auto}}
