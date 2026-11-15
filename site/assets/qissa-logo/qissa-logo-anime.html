@@ -1,5 +1,5 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Qissa — formes en mouvement</title>
-<style>*{box-sizing:border-box}html,body{margin:0;background:transparent;width:1920px;height:1080px;overflow:hidden}#scene{position:absolute;inset:0}canvas{width:1920px;height:1080px}html,body{width:100%;height:100%;display:grid;place-items:center}#scene{position:relative;inset:auto;width:100%;aspect-ratio:16/9}canvas{display:block;width:100%;height:auto}html,body{background:transparent;overflow:hidden}#scene{width:100%;aspect-ratio:1100/499;overflow:hidden}canvas{position:absolute;width:174.545455%;height:216.432866%;left:-37.272727%;top:-58.116232%}</style>
+<style>*{box-sizing:border-box}html,body{margin:0;background:transparent;width:1920px;height:1080px;overflow:hidden}#scene{position:absolute;inset:0}canvas{width:1920px;height:1080px}html,body{width:100%;height:100%;display:grid;place-items:center}#scene{position:relative;inset:auto;width:100%;aspect-ratio:16/9}canvas{display:block;width:100%;height:auto}html,body{background:transparent;overflow:hidden}#scene{width:100%;aspect-ratio:1100/499;overflow:hidden}canvas{position:absolute;width:174.545455%;height:216.432866%;left:-37.272727%;top:-58.116232%}html.blue-logo #scene{width:195%;max-width:none}</style>
 <script>/*!
  * GSAP 3.15.0
  * https://gsap.com
@@ -17,6 +17,8 @@
 window.__timelines=window.__timelines||{};
 const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d');
 const img=document.querySelector('#source-logo');
+const blueLogo=new URLSearchParams(location.search).get('color')==='blue';
+if(blueLogo)document.documentElement.classList.add('blue-logo');
 function initialize(){
  const w=1100,h=Math.round(img.height*w/img.width),temp=document.createElement('canvas');temp.width=w;temp.height=h;
  const tc=temp.getContext('2d');tc.drawImage(img,0,0,w,h);const raw=tc.getImageData(0,0,w,h),d=raw.data,seen=new Uint8Array(w*h),parts=[];
@@ -27,7 +29,7 @@ function initialize(){
    for(const m of [n-1,n+1,n-w,n+w]){if(m<0||m>=w*h||seen[m]||Math.abs(m%w-x)>1||d[m*4+3]<100||(d[m*4+2]<180)!==gold)continue;seen[m]=1;queue.push(m);}}
   if(pixels.length<80)continue;
   const texture=document.createElement('canvas');texture.width=w;texture.height=h;const tx=texture.getContext('2d'),out=tx.createImageData(w,h);
-  for(const n of pixels)for(let c=0;c<4;c++)out.data[n*4+c]=d[n*4+c];tx.putImageData(out,0,0);
+  for(const n of pixels){for(let c=0;c<4;c++)out.data[n*4+c]=d[n*4+c];if(blueLogo&&!gold){out.data[n*4]=22;out.data[n*4+1]=33;out.data[n*4+2]=92;}}tx.putImageData(out,0,0);
   parts.push({texture,cx:(xmin+xmax)/2,cy:(ymin+ymax)/2,gold,x:0,y:0,sx:1,sy:1,rot:0,alpha:1});
  }
  const letters=parts.filter(p=>!p.gold).sort((a,b)=>a.cx-b.cx),star=parts.find(p=>p.gold);

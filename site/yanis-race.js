@@ -97,7 +97,7 @@
       enfant:first,age:age.value==='autre'?null:parseInt(age.value,10),age_texte:ageText,
       genre:form.elements.genre.value||'',de_la_part_de:giver.value==='Autre'?form.elements.offertParAutre.value.trim():giver.value,
       message:form.elements.dedicace.value.trim(),offre:offer,
-      client:{nom:form.elements.client.value.trim(),telephone,ville:form.elements.ville.value.trim(),adresse:''},
+      client:{nom:form.elements.client.value.trim(),telephone,ville:'',adresse:form.elements.adresse.value.trim()},
       consentement_parent:false
     };
     const button=form.querySelector('.submit');button.disabled=true;button.textContent='Enregistrement de la commande…';
