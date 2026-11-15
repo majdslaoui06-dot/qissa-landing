@@ -60,8 +60,9 @@ SALT = env("IP_SALT") or secrets.token_hex(8)
 
 REF_RE = re.compile(r"^[A-Z]{2,4}-\d{4}-[A-Z0-9]{3,10}$")
 PHOTO_RE = re.compile(r"^(enfant-[1-3]|parent-[1-2]|etape-(naissance|4mois|8mois|1an)|doudou-1)\.jpg$")
-STORIES = {"capitaine", "super", "supersara", "ballet", "iletaitunefois", "parc", "premiereannee", "samyetmomo"}
+STORIES = {"capitaine", "super", "supersara", "ballet", "iletaitunefois", "parc", "premiereannee", "samyetmomo", "blue-coaching-race"}
 OFFER_PRICES = {"livre": 195, "coffret": 289}
+RACE_OFFER_PRICES = {"livre": 165, "coffret": 242}
 OFFERS = set(OFFER_PRICES)
 DELIVERY_PRICE = 35
 HITS: dict[str, list[float]] = {}
@@ -202,7 +203,7 @@ async def create_order(request: Request, order: str = Form(...), photos: list[Up
         raise HTTPException(400, "Trop de photos.")
 
     ref = new_ref()
-    price = OFFER_PRICES[o["offre"]]
+    price = (RACE_OFFER_PRICES if o["histoire"] == "blue-coaching-race" else OFFER_PRICES)[o["offre"]]
     delivery = DELIVERY_PRICE
     grand_total = price + delivery
     odir = order_dir(ref)
