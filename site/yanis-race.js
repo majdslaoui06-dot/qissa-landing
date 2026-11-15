@@ -78,7 +78,7 @@
   }
   form.onsubmit=async event=>{
     event.preventDefault();
-    if(!form.dataset.liveOrders){
+    if(!form.hasAttribute('data-live-orders')){
       message.textContent='Aperçu validé dans le simulateur. La commande ne sera activée qu’après votre accord et la mise en ligne.';
       message.scrollIntoView({behavior:'smooth',block:'center'});
       return;
